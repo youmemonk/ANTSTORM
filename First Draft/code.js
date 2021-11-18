@@ -54,14 +54,65 @@ function convertSheet2JsonText(sheet) {
   // after the second line(data)
   var lastRow = sheet.getLastRow();
   var rowValues = [];
+
+  //! Retrieve Row Values
   for (var rowIndex = 2; rowIndex <= lastRow; rowIndex++) {
     var colStartIndex = 1;
     var rowNum = 1;
     var range = sheet.getRange(rowIndex, colStartIndex, rowNum,
       sheet.getLastColumn());
     var values = range.getValues();
-    rowValues.push(values[0]);
+    // rowValues.push(values[0]);
+
+    // Logger.log(values[0][3]);
+    // if(colStartIndex == 3){
+    //   rowValues.push("apple")
+    // }
+    // else{
+    //   rowValues.push(values[0][3]);
+    // }
+
+    rowValues.push(values[0]);  
+
+    // var valueIndex = 0;
+    // for(var valueIndex =0; valueIndex<values[0].length; valueIndex++){
+    //   var url = sheet.getRange([`D${valueIndex+1}`]).getRichTextValue().getLinkUrl();
+    //   if(valueIndex == 3){
+    //     // rowValues.push("apple");
+    //     rowValues.push(url)
+    //   }
+    //   else{
+    //     rowValues.push(values[0][valueIndex]);
+    //   }
+    // }
   }
+
+  var sheetName = "Sheet1";
+  var sheetId = "1moHFCyeeZDUIyYYCXfMaLJwnpxYu4eMStottyhrFpV8";
+  var book = SpreadsheetApp.openById(sheetId);
+  var sheet = book.getSheetByName(sheetName);
+
+  // Logger.log(rowValues[0])
+
+  for(var i=0; i<rowValues.length; i++){
+  var url = sheet.getRange([`D${i+2}`]).getRichTextValue().getLinkUrl();  
+
+  rowValues[i][3] = url;
+  // Logger.log(url)
+  }
+
+  // Logger.log(rowValues);
+  
+
+  // var sheetName = "Sheet1";
+  // var sheetId = "1moHFCyeeZDUIyYYCXfMaLJwnpxYu4eMStottyhrFpV8";
+  // var book = SpreadsheetApp.openById(sheetId);
+  // var sheet = book.getSheetByName(sheetName);
+
+     // var i = 22;
+    // var url = sheet.getRange([`D${i}`]).getRichTextValue().getLinkUrl();
+    // var url = sheet.setActiveRangeList(range).getRichTextValue().getLinkUrl();
+    // Logger.log(range);
 
   // create json
   var jsonArray = [];
@@ -73,5 +124,8 @@ function convertSheet2JsonText(sheet) {
     }
     jsonArray.push(json);
   }
+
+  // Logger.log(jsonArray);
+
   return jsonArray;
 }
