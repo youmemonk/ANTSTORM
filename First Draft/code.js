@@ -15,12 +15,13 @@ function execute(checkedID){
   // var sheetID = '1moHFCyeeZDUIyYYCXfMaLJwnpxYu4eMStottyhrFpV8'
 
   // var document = DocumentApp.create("New Document")
-var name1 = 'WM';
-var name2= 'flipkart'; 
-var name3 = ['MOM', 'mom1', 'mom2'];
+var name1 = 'BU';
+var name2= 'random'; 
+// var name3 = ['file1', 'file2', 'file3'];
   for(var i=0; i<checkedID.length; i++){
 
-    DriveApp.getFileById(checkedID[i][0]).makeCopy(name1+ ' | '+name2+ ' | '+name3[i],DriveApp.getFolderById(targetFolderID));
+    // DriveApp.getFileById(checkedID[i][0]).makeCopy(name1+ ' | '+name2+ ' | '+ "name",DriveApp.getFolderById(targetFolderID));
+    DriveApp.getFileById(checkedID[i][0]).makeCopy(DriveApp.getFolderById(targetFolderID));
   }
   // DriveApp.getFileById(document.getId()).crea("Copied File", targetFolderID)
 }
