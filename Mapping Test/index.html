@@ -9,41 +9,73 @@
 </head>
 
 <body>
-    <!-- <label for="cars">Choose a car:</label> -->
 
-    <select name="Business Unit" id="BU" onchange="change()">
-        <option>Choose A BU.
+    <h1>Assets and Templates</h1>
+
+    <!-- Cycle dropdown -->
+    <select name="Cycle" id="Cycle" onchange="selectCycle()">
+        <option value="" disabled selected>Choose cycle
         </option>
-        <option value="WM">Work Modernization
+        <option value="Consulting">Consulting
+        </option>
+        <option value="Delivery">Delivery
+        </option>
+    </select>
+
+    <!-- BU dropdown -->
+    <select name="Business Unit" id="BU" onchange="selectBU()">
+        <option value="" disabled selected>Choose a Business Unit (BU)
+        </option>
+        <option value="AI">Artificial Intelligence
         </option>
         <option value="CE">Cloud Engineering
         </option>
-        <option value="DnA">Data & Analytics
+        <option value="D&A">Data & Analytics
         </option>
         <option value="SE">Software Engineering
         </option>
-        <!-- <option value="audi">Managed Services
-        </option> -->
+        <option value="WM">Work Modernization
+        </option>
     </select>
-    <!-- <button id="btn" onclick="change()">Submit</button> -->
 
     <script>
-        
-        function change() {
-            var element = document.getElementById('BU').value;
-            if (element == 'WM') {
-                console.log('Work Mordernisation')
-            } else if (element == 'CE') {
-                console.log('Cloud Engineering')
-            } else if (element == 'DnA') {
-                console.log('Data Anal')
-            } else if (element == 'SE') {
-                console.log('Software Engineering')
-            }
+        //! Agenda:  Value from html -> Appscript -> return html -> console.log
+
+        //! Gets Value from Cycle Dropdown, passes to Backend, fetches & returns folder id
+        function selectCycle() {
+            var cycleElement = document.getElementById('Cycle').value;
+
+            google.script.run
+                .withSuccessHandler(getBUFolderId)
+                .withUserObject(this)
+                .cycle(cycleElement);
         }
 
+        var chosenBUFolderId;
 
-        
+        function getBUFolderId(dt) {
+            chosenBUFolderId = dt
+            console.log(chosenBUFolderId)
+            // console.log()
+        }
+
+        //! Gets Value from BU Dropdown, passes to Backend, fetches & returns folder id
+        function selectBU() {
+            var buElement = document.getElementById('BU').value;
+
+            google.script.run
+                .withSuccessHandler(getMasterSheetId)
+                .withUserObject(this)
+                .mastersheetLocation(buElement, Object.values(chosenBUFolderId)[0]);
+
+
+        }
+        var chosenSheetId;
+
+        function getMasterSheetId(dt) {
+            chosenSheetId = dt
+            console.log(chosenSheetId)
+        }
     </script>
 </body>
 

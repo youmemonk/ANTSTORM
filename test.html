@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>Assets and Templates</h1>
+
+    <!-- Cycle dropdown -->
+    <select name="Cycle" id="Cycle" onchange="selectCycle()">
+        <option value="" disabled selected>Choose cycle
+        </option>
+        <option value="Consulting" selected>Consulting
+        </option>
+        <option value="Delivery">Delivery
+        </option>
+    </select>
+
+    <!-- BU dropdown -->
+    <select name="Business Unit" id="BU" onchange="selectBU()">
+        <option value="" disabled selected>Choose a Business Unit (BU)
+        </option>
+        <option value="AI">Artificial Intelligence
+        </option>
+        <option value="CE">Cloud Engineering
+        </option>
+        <option value="DnA">Data & Analytics
+        </option>
+        <option value="SE">Software Engineering
+        </option>
+        <option value="WM">Work Modernization
+        </option>
+    </select>
+
+    <script>
+        //! Value from html -> Appscript -> return html -> console.log
+        function selectCycle(){
+          google.script.run
+            .withSuccessHandler(dummy)
+            .withUserObject(this)
+            .test();
+        }
+
+        function dummy(e){
+          console.log(e)
+        }
+        
+        
+        //! Integration Testing
+        var cycleElement = document.getElementById('Cycle').value;
+        console.log(cycleElement);
+
+
+        function selectBU() {
+            // console.log(document.getElementById('BU').value)
+
+            var element = document.getElementById('BU').value;
+            // if (element == 'AI') {
+            //     console.log('Artificial Intelligence')
+            // } else if (element == 'CE') {
+            //     console.log('Cloud Engineering')
+            // } else if (element == 'DnA') {
+            //     console.log('Data Anal')
+            // } else if (element == 'SE') {
+            //     console.log('Software Engineering')
+            // }
+            // else if (element == 'WM') {
+            //     console.log('Work Mordernisation')
+            // }
+        }
+
+        // console.log(element);
+    </script>
+</body>
+
+</html>

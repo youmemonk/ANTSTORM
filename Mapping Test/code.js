@@ -2,57 +2,52 @@ function doGet() {
   return HtmlService.createHtmlOutputFromFile("index");
 }
 
-// var cyclelist = ['apple'];
+function cycle(cycleParam) {
+  //? Select Delivery/Sales
+  var cycleFolderID = "0AK1U4yt0u5qcUk9PVA";
+  var cyclefolder = DriveApp.getFolderById(cycleFolderID);
+  var cyclelist = cyclefolder.getFolders();
+
+  var chosenCycleFolderId = {};
+  while (cyclelist.hasNext()) {
+    var tempCycle = cyclelist.next();
+    if (tempCycle.getName().includes(cycleParam)) {
+      chosenCycleFolderId[cycleParam] = tempCycle.getId();
+      break;
+    }
+  }
+  Logger.log(chosenCycleFolderId);
+  return chosenCycleFolderId;
+}
 
 //! Delivery -> Business Folder -> Master Sheet -> Get ID
-function mastersheetLocation(name2) {
-  //? Delivery/Sales to Business Folder
-  var parentFolderID = "19QA8tlwnEGsMlgrE1K5n2GvZhRk5ZspA";
+function mastersheetLocation(buParam, folderId) {
+  //? Delivery/Consulting to Business Unit(BU) Folder
+  // var parentFolderID = '19QA8tlwnEGsMlgrE1K5n2GvZhRk5ZspA';
+  var parentFolderID = folderId;
   var businessfolder = DriveApp.getFolderById(parentFolderID);
   var BUlist = businessfolder.getFolders();
-  var BUnames = [];
+  // var BUnames = [];
+  //! Select individual BU
+  var chosenBUFolderId = {};
   while (BUlist.hasNext()) {
-    var folder = BUlist.next();
-    BUnames.push(folder.getId());
+    var tempBU = BUlist.next();
+    // BUnames.push(tempBU.getName());
+
+    if (tempBU.getName().includes(buParam)) {
+      chosenBUFolderId[buParam] = tempBU.getId();
+      break;
+    }
   }
   // Logger.log(BUnames);
 
   //? Business Folder to Get Sheet & Sheet ID
-  var BUID = BUnames[2];
-  var BUFolder = DriveApp.getFolderById(BUID);
+  //! Get templates sheet id
+  var BUFolder = DriveApp.getFolderById(Object.values(chosenBUFolderId)[0]);
   var masterfiles = BUFolder.getFiles();
   var masterfile = masterfiles.next();
   var masterfileID = masterfile.getId();
-  // Logger.log(masterfileID);
+  Logger.log(masterfileID);
 
-  cycle();
-  // Logger.log(cyclelist);
-
-  function cycle(name1) {
-    //? Select Delivery/Sales
-    var cycleFolderID = "0AK1U4yt0u5qcUk9PVA";
-    var cyclefolder = DriveApp.getFolderById(cycleFolderID);
-    var cyclelist = cyclefolder.getFolders();
-    var cyclenames = [];
-    while (cyclelist.hasNext()) {
-      var temp = cyclelist.next();
-      cyclenames.push(temp.getName());
-    }
-
-    Logger.log(cyclenames);
-  }
+  return masterfileID;
 }
-
-// function cycle(name1){
-//   //? Select Delivery/Sales
-//   var cycleFolderID = "0AK1U4yt0u5qcUk9PVA";
-//   var cyclefolder = DriveApp.getFolderById(cycleFolderID);
-//   var cyclelist = cyclefolder.getFolders();
-//   var cyclenames = [];
-//   while(cyclelist.hasNext()){
-//     var temp = cyclelist.next();
-//     cyclenames.push(temp.getName());
-//   }
-
-//   // Logger.log(cyclenames);
-// }
