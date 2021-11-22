@@ -1,34 +1,34 @@
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('index');
+  return HtmlService.createHtmlOutputFromFile("index");
 }
 
-function doSomething(){
-  Logger.log('code running')
+function doSomething() {
+  Logger.log("code running");
 }
 
-function execute(checkedID){
-  Logger.log('working')
+function execute(checkedID) {
+  Logger.log("working");
 
   // var targetFolderID = '1JGids9srowkWekj0e3ru87PW7XxhgW7C';
   // var targetFolderID = '1Di1luMkvY2uxz6Rae8KeuDW80foEAHmZ';
-  var targetFolderID='10ap5wJPZ9nsR633bV7QUk_fO_dlAeWCg';
+  var targetFolderID = "10ap5wJPZ9nsR633bV7QUk_fO_dlAeWCg";
   // var sheetID = '1moHFCyeeZDUIyYYCXfMaLJwnpxYu4eMStottyhrFpV8'
 
   // var document = DocumentApp.create("New Document")
-var name1 = 'BU';
-var name2= 'random'; 
-// var name3 = ['file1', 'file2', 'file3'];
-  for(var i=0; i<checkedID.length; i++){
-
+  var name1 = "BU";
+  var name2 = "random";
+  // var name3 = ['file1', 'file2', 'file3'];
+  for (var i = 0; i < checkedID.length; i++) {
     // DriveApp.getFileById(checkedID[i][0]).makeCopy(name1+ ' | '+name2+ ' | '+ "name",DriveApp.getFolderById(targetFolderID));
-    DriveApp.getFileById(checkedID[i][0]).makeCopy(DriveApp.getFolderById(targetFolderID));
+    DriveApp.getFileById(checkedID[i][0]).makeCopy(
+      DriveApp.getFolderById(targetFolderID)
+    );
   }
   // DriveApp.getFileById(document.getId()).crea("Copied File", targetFolderID)
 }
 
 //Fetch data from sheet
 function fetchData() {
-
   var sheetName = "Sheet1";
   var sheetId = "1moHFCyeeZDUIyYYCXfMaLJwnpxYu4eMStottyhrFpV8";
 
@@ -60,8 +60,12 @@ function convertSheet2JsonText(sheet) {
   for (var rowIndex = 2; rowIndex <= lastRow; rowIndex++) {
     var colStartIndex = 1;
     var rowNum = 1;
-    var range = sheet.getRange(rowIndex, colStartIndex, rowNum,
-      sheet.getLastColumn());
+    var range = sheet.getRange(
+      rowIndex,
+      colStartIndex,
+      rowNum,
+      sheet.getLastColumn()
+    );
     var values = range.getValues();
     // rowValues.push(values[0]);
 
@@ -73,7 +77,7 @@ function convertSheet2JsonText(sheet) {
     //   rowValues.push(values[0][3]);
     // }
 
-    rowValues.push(values[0]);  
+    rowValues.push(values[0]);
 
     // var valueIndex = 0;
     // for(var valueIndex =0; valueIndex<values[0].length; valueIndex++){
@@ -95,25 +99,27 @@ function convertSheet2JsonText(sheet) {
 
   // Logger.log(rowValues[0])
 
-  for(var i=0; i<rowValues.length; i++){
-  var url = sheet.getRange([`D${i+2}`]).getRichTextValue().getLinkUrl();  
+  for (var i = 0; i < rowValues.length; i++) {
+    var url = sheet
+      .getRange([`D${i + 2}`])
+      .getRichTextValue()
+      .getLinkUrl();
 
-  rowValues[i][3] = url;
-  // Logger.log(url)
+    rowValues[i][3] = url;
+    // Logger.log(url)
   }
 
   // Logger.log(rowValues);
-  
 
   // var sheetName = "Sheet1";
   // var sheetId = "1moHFCyeeZDUIyYYCXfMaLJwnpxYu4eMStottyhrFpV8";
   // var book = SpreadsheetApp.openById(sheetId);
   // var sheet = book.getSheetByName(sheetName);
 
-     // var i = 22;
-    // var url = sheet.getRange([`D${i}`]).getRichTextValue().getLinkUrl();
-    // var url = sheet.setActiveRangeList(range).getRichTextValue().getLinkUrl();
-    // Logger.log(range);
+  // var i = 22;
+  // var url = sheet.getRange([`D${i}`]).getRichTextValue().getLinkUrl();
+  // var url = sheet.setActiveRangeList(range).getRichTextValue().getLinkUrl();
+  // Logger.log(range);
 
   // create json
   var jsonArray = [];

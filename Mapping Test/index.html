@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <label for="cars">Choose a car:</label> -->
+
+    <select name="Business Unit" id="BU" onchange="change()">
+        <option>Choose A BU.
+        </option>
+        <option value="WM">Work Modernization
+        </option>
+        <option value="CE">Cloud Engineering
+        </option>
+        <option value="DnA">Data & Analytics
+        </option>
+        <option value="SE">Software Engineering
+        </option>
+        <!-- <option value="audi">Managed Services
+        </option> -->
+    </select>
+    <!-- <button id="btn" onclick="change()">Submit</button> -->
+
+    <script>
+        
+        function change() {
+            var element = document.getElementById('BU').value;
+            if (element == 'WM') {
+                console.log('Work Mordernisation')
+            } else if (element == 'CE') {
+                console.log('Cloud Engineering')
+            } else if (element == 'DnA') {
+                console.log('Data Anal')
+            } else if (element == 'SE') {
+                console.log('Software Engineering')
+            }
+        }
+
+
+        
+    </script>
+</body>
+
+</html>
