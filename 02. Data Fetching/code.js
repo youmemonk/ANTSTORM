@@ -1,10 +1,20 @@
 function fetchData() {
+  // var sheetId = "1Ais-7oPMCR_C2rNJgGsiPIeXXejXMazy0gMbLP9DFXg";
   var sheetId = "1Ais-7oPMCR_C2rNJgGsiPIeXXejXMazy0gMbLP9DFXg";
-  var sheetName = "SE | Delivery Assets";
   var book = SpreadsheetApp.openById(sheetId);
+
+  //! Get Sheet Name
+  var list = [];
+  for (var i = 0; i < book.getSheets().length; i++) {
+    list.push(book.getSheets()[i].getName());
+  }
+  //! Hardcoded Sheetname here
+  var sheetName = list[0];
+
   var sheet = book.getSheetByName(sheetName);
   var values = sheet.getDataRange().getValues();
 
+  //! Get Urls
   var urlList = ["Document Link"];
   for (var i = 1; i < values.length; i++) {
     var url = sheet
@@ -22,10 +32,9 @@ function fetchData() {
 
   //! Filelist to JSON object
   // var startTime = (new Date()).getTime()
-  // Logger.log(arrayToJSONObject(fileList));
   var data = arrayToJSONObject(fileList);
+  Logger.log(data);
   // var endTime = (new Date()).getTime()
-
   // Logger.log(`Call to Arraywala took ${endTime - startTime} milliseconds`)
 
   //! Data has sheet data + url links
