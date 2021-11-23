@@ -15,10 +15,21 @@ function fetchData() {
   }
 
   var fileList = [];
+  //! Merge urls and Sheet Data into Filelist
   for (var i = 0; i < values.length; i++) {
     fileList.push(values[i].concat(urlList[i]));
   }
-  Logger.log(arrayToJSONObject(fileList));
+
+  //! Filelist to JSON object
+  // var startTime = (new Date()).getTime()
+  // Logger.log(arrayToJSONObject(fileList));
+  var data = arrayToJSONObject(fileList);
+  // var endTime = (new Date()).getTime()
+
+  // Logger.log(`Call to Arraywala took ${endTime - startTime} milliseconds`)
+
+  //! Data has sheet data + url links
+  return data;
 }
 
 function arrayToJSONObject(fileList) {
