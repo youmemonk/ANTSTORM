@@ -13,42 +13,24 @@
     <h1>Assets and Templates</h1>
 
     <!-- Cycle dropdown -->
-    <select name="Cycle" id="Cycle" onchange="selectCycle()">
-        <option value="" disabled selected>Choose a Business cycle
-        </option>
-        <option value="Consulting">Consulting
-        </option>
-        <option value="Delivery">Delivery
-        </option>
-    </select>
-
-    <!-- BU dropdown -->
-    <!-- <select name="Business Unit" id="BU" onchange="selectBU()">
-        <option value="" disabled selected>Choose a Business Unit (BU)
-        </option>
-        <option value="AI">Artificial Intelligence
-        </option>
-        <option value="CE">Cloud Engineering
-        </option>
-        <option value="D&A">Data & Analytics
-        </option>
-        <option value="SE">Software Engineering
-        </option>
-        <option value="WM">Work Modernization
-        </option>
-    </select> -->
-    <!-- <button onclick="selectBU()">Click</button> -->
-
-    <div id="dummy">
-        <select name="Dummy Select">
-            <option value=" " disabled >Select Cycle First
+    <div>
+        <select name="Cycle" id="Cycle" onchange="selectCycle()">
+            <option value="" disabled selected>Choose a Business cycle
+            </option>
+            <option value="Consulting">Consulting
+            </option>
+            <option value="Delivery">Delivery
             </option>
         </select>
-        <!-- <h2>Dummy Div</h2> -->
     </div>
 
-
-
+    <!-- BU dropdown -->
+    <div id="BUDropdown">
+        <select>
+            <option value="" disabled>Select Cycle First
+            </option>
+        </select>
+    </div>
 
     <script>
         var acronyms = {
@@ -58,7 +40,6 @@
             "SE": "Software Engineering",
             "WM": "Work Mordernisation"
         }
-        //? Dummy options -> Get real options from backend
         //! Agenda:  Value from html -> Appscript -> return html -> console.log
 
         //! Gets Value from Cycle Dropdown, passes to Backend, fetches & returns folder id
@@ -72,24 +53,22 @@
         }
 
         var chosenBUFolderId;
-
+        // Get selected cycle folder id from backend, and list of BU subfolders
         function getBUFolderId(dt) {
             chosenBUFolderId = dt[0]
             console.log(chosenBUFolderId)
-            var temp = dt[1];
-            console.log(temp)
+            var buList = dt[1];
+            console.log(buList)
             //? Get list from backend 
             var finaloptions = []
-            for (var i = 0; i < temp.length; i++) {
-                finaloptions[i] = `<option value=${temp[i]}>` + acronyms[temp[i]] + "</option>";
+            for (var i = 0; i < buList.length; i++) {
+                finaloptions[i] = `<option value=${buList[i]}>` + acronyms[buList[i]] + "</option>";
             }
-            // function buttonclick(){
-            document.getElementById('dummy').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)
-        </option>" +  ${finaloptions.join()} + </select>`;
-            // }
+            document.getElementById('BUDropdown').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)
+      </option>" +  ${finaloptions.join()} + </select>`;
         }
 
-        //! Gets Value from BU Dropdown, passes to Backend, fetches & returns folder id
+        //! Gets Value from BU Dropdown and get chosenFolderId and passes them to Backend, fetches & returns sheet id
         function selectBU() {
             var buElement = document.getElementById('BU').value;
 
