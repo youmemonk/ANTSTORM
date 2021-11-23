@@ -14,7 +14,7 @@
 
     <!-- Cycle dropdown -->
     <select name="Cycle" id="Cycle" onchange="selectCycle()">
-        <option value="" disabled selected>Choose cycle
+        <option value="" disabled selected>Choose a Business cycle
         </option>
         <option value="Consulting">Consulting
         </option>
@@ -23,7 +23,7 @@
     </select>
 
     <!-- BU dropdown -->
-    <select name="Business Unit" id="BU" onchange="selectBU()">
+    <!-- <select name="Business Unit" id="BU" onchange="selectBU()">
         <option value="" disabled selected>Choose a Business Unit (BU)
         </option>
         <option value="AI">Artificial Intelligence
@@ -36,27 +36,57 @@
         </option>
         <option value="WM">Work Modernization
         </option>
-    </select>
+    </select> -->
+    <!-- <button onclick="selectBU()">Click</button> -->
+
+    <div id="dummy">
+        <select name="Dummy Select">
+            <option value=" " disabled >Select Cycle First
+            </option>
+        </select>
+        <!-- <h2>Dummy Div</h2> -->
+    </div>
+
+
+
 
     <script>
+        var acronyms = {
+            "AI": "Artificial Intelligance",
+            "CE": "Cloud Engineering",
+            "D&A": "Data & Analytics",
+            "SE": "Software Engineering",
+            "WM": "Work Mordernisation"
+        }
+        //? Dummy options -> Get real options from backend
         //! Agenda:  Value from html -> Appscript -> return html -> console.log
 
         //! Gets Value from Cycle Dropdown, passes to Backend, fetches & returns folder id
         function selectCycle() {
-            var cycleElement = document.getElementById('Cycle').value;
+            var cycleParam = document.getElementById('Cycle').value;
 
             google.script.run
                 .withSuccessHandler(getBUFolderId)
                 .withUserObject(this)
-                .cycle(cycleElement);
+                .cycle(cycleParam);
         }
 
         var chosenBUFolderId;
 
         function getBUFolderId(dt) {
-            chosenBUFolderId = dt
+            chosenBUFolderId = dt[0]
             console.log(chosenBUFolderId)
-            // console.log()
+            var temp = dt[1];
+            console.log(temp)
+            //? Get list from backend 
+            var finaloptions = []
+            for (var i = 0; i < temp.length; i++) {
+                finaloptions[i] = `<option value=${temp[i]}>` + acronyms[temp[i]] + "</option>";
+            }
+            // function buttonclick(){
+            document.getElementById('dummy').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)
+        </option>" +  ${finaloptions.join()} + </select>`;
+            // }
         }
 
         //! Gets Value from BU Dropdown, passes to Backend, fetches & returns folder id
