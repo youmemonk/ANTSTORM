@@ -45,7 +45,11 @@
         // var temp = [];
         function dummyFunction(dt) {
             console.log('Data Fetch Running...');
-            rootSheetData = dt;
+            rootSheetData = dt[0];
+            buSheetData = dt[1];
+            productSheetData = dt[2];
+
+            // console.log(productSheetData)
 
             // var cycleParameter = document.getElementById('Cycle').value;
             //* Get Delivery Array
@@ -77,7 +81,6 @@
 
         var temp2 = [];
         var buList = [];
-        var masterSheet
 
         function selectCycle() {
             var cycleParameter = document.getElementById("Cycle").value;
@@ -107,11 +110,14 @@
                 }
                 buList = temp2.slice();
                 temp2 = []; //* empty temp
-                console.log(buList)
+                // console.log(buList)
             }
 
             //* Feed Data to next dropdown
             //! [IMPORTANT] Confirm acronyms from mapping sheet and then push
+            console.log(buSheetData[6])
+
+
             var list = [];
             for (var i = 0; i < buList.length; i++) {
                 list.push(`<option value=${buList[i][0]}>` + `${buList[i][0]}` + "</option>");
@@ -120,15 +126,14 @@
             // console.log(list)
             list = [];
 
+            // console.log(productSheetData);
+
             // console.log(document.getElementById('BUDropdown').value)
         }
 
         function selectBU() {
             // console.log(document.getElementById('BUDropdown').value);
             var BUparam = document.getElementById('BUDropdown').value;
-            // console.log(BUparam)
-            // console.log(delArray)
-            // console.log(consArray)
             var sheetIndex;
             for (var i = 0; i < buList.length; i++) {
                 if (buList[i][0] == BUparam) {

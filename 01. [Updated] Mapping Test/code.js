@@ -3,23 +3,33 @@ function doGet() {
 }
 
 //! Global Links for Master Sheets
-//? Root Folder for Template Repo: 0AK1U4yt0u5qcUk9PVA
-var rootFolderID = "0AK1U4yt0u5qcUk9PVA";
 var rootSheetID = "1DeJwac2x9nToJDZq9G1fwa0DNIzZGIj5oe1Wrz3Rd68";
+var productSheetID = "1hk2wyK0fYitlmz3ag39NffusLU_VKEAzac-qBQeOYrI";
 
 function RootFolderMapping() {
+  //! For Root Folder Mapping
   var sheetName = "Sheet1";
   var book = SpreadsheetApp.openById(rootSheetID);
   var sheet = book.getSheetByName(sheetName);
+  var rootdata = arrayToJSONObject(sheet.getDataRange().getValues());
 
-  // Logger.log(sheet.getDataRange().getValues())
-  var data = arrayToJSONObject(sheet.getDataRange().getValues());
-  // return json;
-
-  Logger.log(data);
+  // Logger.log(rootdata);
   // Logger.log(sheet.getDataRange().getValues());
 
-  return data;
+  //! For BU Name Mapping
+  var busheetName = "Shared Drive Mapping";
+  var bubook = SpreadsheetApp.openById(productSheetID);
+  var buSheet = bubook.getSheetByName(busheetName);
+  var buData = arrayToJSONObject(buSheet.getDataRange().getValues());
+
+  //! For Product Mapping
+  var productname = "Product Mapping";
+  var productSheet = bubook.getSheetByName(productname);
+  var productData = arrayToJSONObject(productSheet.getDataRange().getValues());
+
+  Logger.log(productData);
+
+  return [rootdata, buData, productData];
 }
 
 function arrayToJSONObject(fileList) {
