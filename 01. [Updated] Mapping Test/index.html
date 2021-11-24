@@ -28,9 +28,16 @@
     <!-- <button onclick="buttonclick()">Click</button> -->
 
     <!-- BU dropdown -->
-    <div>
-        <select id="BUDropdown" onchange="selectBU()">
+    <div id="BUDropdown">
+        <select>
             <option value="" disabled selected>Select Business Unit (BU)
+            </option>
+        </select>
+    </div>
+    <!-- Product dropdown -->
+    <div id='productDropdown'>
+        <select name="product" id="product">
+            <option value="" disabled selected>Select the Product
             </option>
         </select>
     </div>
@@ -41,6 +48,9 @@
         //* Fetch data from Server Side
         var delArray = [];
         var consArray = [];
+
+        var buNameMaping = {}
+        var productNameMaping = {}
         // var commonArray = [];
         // var temp = [];
         function dummyFunction(dt) {
@@ -65,6 +75,18 @@
                     consArray.push(rootSheetData[i]);
                 }
             }
+
+            // Convert buSheetData to BU code: BU full name mapping object
+            for (var i = 0; i < buSheetData.length; i++) {
+                buNameMaping[buSheetData[i]["BU Code"]] = buSheetData[i]["Business Unit (As received from SFDC)"]
+            }
+            // Convert productSheetData to Product code: Product full name mapping object
+            for (var i = 0; i < productSheetData.length; i++) {
+                productNameMaping[productSheetData[i]["Product Code"]] = productSheetData[i]["Product Name"]
+            }
+            // console.log(buNameMaping)
+            // console.log(productNameMaping)
+
         }
 
         //* Server Side Function Call
@@ -115,14 +137,17 @@
 
             //* Feed Data to next dropdown
             //! [IMPORTANT] Confirm acronyms from mapping sheet and then push
-            console.log(buSheetData[6])
+            // console.log(buSheetData[6])
 
 
             var list = [];
             for (var i = 0; i < buList.length; i++) {
-                list.push(`<option value=${buList[i][0]}>` + `${buList[i][0]}` + "</option>");
+                list.push(`<option value=${buList[i][0]}>` + buNameMaping[buList[i][0]] + "</option>");
             }
-            document.getElementById("BUDropdown").innerHTML = list.join();
+            // document.getElementById("BUDropdown").innerHTML = list.join();
+            //       document.getElementById('BUDropdown').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)
+            // </option>" +  ${list.join()} + </select>`;
+            document.getElementById('BUDropdown').innerHTML = '<select><option>1</option><option>2</option></select>'
             // console.log(list)
             list = [];
 
@@ -148,10 +173,49 @@
             //! [IMPORTANT] If index == null -> Alert No sheet Found
             // console.log(index)
             // return sheetIndex;
+
+            // 
+            //       // Populate product dropdown from productList
+            //       var product = []
+            //       for (var i = 0; i < productList.length; i++) {
+            //           product[i] = `<option value=${productList[i]}>` + productList[i] + "</option>";
+            //       }
+            //       document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
+            // </option>" +  ${product.join()} + </select>`;
         }
 
+        var selectedSheetData;
+
         function newdummyFunction(dt) {
-            console.log(dt);
+            // console.log(dt);
+            selectedSheetData = dt
+            // console.log(dt)
+            // Search available product codes in fetched sheet
+            var availableProduct = []
+            for (var i = 0; i < selectedSheetData.length; i++) {
+                // console.log(selectedSheetData[i]['Product'])
+                availableProduct.push(selectedSheetData[i]['Product'])
+            }
+            // console.log(availableProduct)
+            // console.log([...new Set(availableProduct)])
+            var uniqueAvailableProds = [...new Set(availableProduct)]
+
+            // Populate product dropdown from uniqueAvailableProds
+            var product = []
+            for (var i = 0; i < uniqueAvailableProds.length; i++) {
+                product[i] = `<option value=${uniqueAvailableProds[i]}>` + uniqueAvailableProds[i] + "</option>";
+            }
+            document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
+      </option>" +  ${product.join()} + </select>`;
+        }
+
+        function selectProduct() {
+            // console.log(document.getElementById('product').value)
+            for (var i = 0; i < selectedSheetData.length; i++) {
+                if (selectedSheetData[i]['Product'] == document.getElementById('product').value) {
+                    console.log(selectedSheetData[i])
+                }
+            }
         }
     </script>
 </body>
