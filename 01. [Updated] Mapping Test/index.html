@@ -14,8 +14,8 @@
 
     <!-- Cycle dropdown -->
     <div>
-        <!-- <select name="Cycle" id="Cycle" onchange="selectCycle()"> -->
-        <select name="Cycle" id="Cycle">
+        <select name="Cycle" id="Cycle" onchange="selectCycle()">
+            <!-- <select name="Cycle" id="Cycle"> -->
             <option value="" disabled selected>Select a Business cycle
             </option>
             <option value="Consulting">Consulting
@@ -25,15 +25,15 @@
         </select>
     </div>
 
-    <button onclick="buttonclick()">Click</button>
+    <!-- <button onclick="buttonclick()">Click</button> -->
 
     <!-- BU dropdown -->
-    <!-- <div id="BUDropdown">
-      <select>
-          <option value="" disabled selected>Select Business Unit (BU)
-          </option>
-      </select>
-  </div> -->
+    <div>
+        <select id="BUDropdown" onchange="selectBU()">
+            <option value="" disabled selected>Select Business Unit (BU)
+            </option>
+        </select>
+    </div>
 
     <script>
         var rootSheetData;
@@ -41,6 +41,7 @@
         //* Fetch data from Server Side
         var delArray = [];
         var consArray = [];
+        // var commonArray = [];
         // var temp = [];
         function dummyFunction(dt) {
             console.log('Data Fetch Running...');
@@ -68,84 +69,85 @@
             .withUserObject(this)
             .RootFolderMapping();
 
-        var temp = [];
-        // var conArray = [];
         //* Get Selected Cycle Data from RootSheet
-        function buttonclick() {
-            // var cycleParameter = document.getElementById('Cycle').value;
-            // // console.log(cycleParameter.value)
-            // // for(var i=0; i<dt) 
-            // // console.log(rootSheetData);
-            // for(var i=0; i<rootSheetData.length; i++){
-            //   if(rootSheetData[i]["BU"].includes(cycleParameter)){
-            //     temp.push(rootSheetData[i]);
-            //   }
+        // function buttonclick(){
+        //   console.log(delArray);
+        //   console.log(consArray);
+        // }
+
+        var temp2 = [];
+        var buList = [];
+        var masterSheet
+
+        function selectCycle() {
+            var cycleParameter = document.getElementById("Cycle").value;
+            var commonarray = [];
+            // if(cycleParameter == 'Delivery'){
+            //   var trial =
             // }
-            // cycleArray = temp.slice();
-            // temp = [];
-            // //* Cycle Array Contains selected Cycle Parameters only.
-            // console.log(cycleArray);
-            console.log(delArray);
-            console.log(consArray);
+
+            if (cycleParameter == "Delivery") {
+                // console.log(delArray);
+                // var trial = delArray[0]["BU"].split(' ');
+                // console.log(trial[0]);
+                for (var i = 0; i < delArray.length; i++) {
+                    // temp2[0][i].push(delArray[i]["BU"].split(' ')[0]);
+                    // temp2[1][i].push(delArray[i]["Template File ID"])
+                    temp2.push([delArray[i]["BU"].split(' ')[0], delArray[i]["Template File ID"]]);
+                }
+                // console.log(temp2)
+                buList = temp2.slice();
+                temp2 = []; //* empty temp
+                // console.log(buList)
+            } else {
+                // console.log(consArray);
+                for (var i = 0; i < consArray.length; i++) {
+                    // temp2.push(consArray[i]["BU"].split(' ')[0]);
+                    temp2.push([consArray[i]["BU"].split(' ')[0], consArray[i]["Template File ID"]]);
+                }
+                buList = temp2.slice();
+                temp2 = []; //* empty temp
+                console.log(buList)
+            }
+
+            //* Feed Data to next dropdown
+            //! [IMPORTANT] Confirm acronyms from mapping sheet and then push
+            var list = [];
+            for (var i = 0; i < buList.length; i++) {
+                list.push(`<option value=${buList[i][0]}>` + `${buList[i][0]}` + "</option>");
+            }
+            document.getElementById("BUDropdown").innerHTML = list.join();
+            // console.log(list)
+            list = [];
+
+            // console.log(document.getElementById('BUDropdown').value)
         }
 
+        function selectBU() {
+            // console.log(document.getElementById('BUDropdown').value);
+            var BUparam = document.getElementById('BUDropdown').value;
+            // console.log(BUparam)
+            // console.log(delArray)
+            // console.log(consArray)
+            var sheetIndex;
+            for (var i = 0; i < buList.length; i++) {
+                if (buList[i][0] == BUparam) {
+                    sheetIndex = buList[i][1];
+                }
+            }
+            google.script.run
+                .withSuccessHandler(newdummyFunction)
+                .withUserObject(this)
+                .fetchData(sheetIndex)
 
+            //! [IMPORTANT] If index == null -> Alert No sheet Found
+            // console.log(index)
+            // return sheetIndex;
+        }
 
-
-
-
-        // var acronyms = {
-        //     "AI": "Artificial Intelligance",
-        //     "CE": "Cloud Engineering",
-        //     "D&A": "Data & Analytics",
-        //     "SE": "Software Engineering",
-        //     "WM": "Work Mordernisation"
-        // }
-        // //! Agenda:  Value from html -> Appscript -> return html -> console.log
-
-        // //! Gets Value from Cycle Dropdown, passes to Backend, fetches & returns folder id
-        // function selectCycle() {
-        //     var cycleParam = document.getElementById('Cycle').value;
-
-        //     google.script.run
-        //         .withSuccessHandler(getBUFolderId)
-        //         .withUserObject(this)
-        //         .cycle(cycleParam);
-        // }
-
-        // var chosenBUFolderId;
-        // // Get selected cycle folder id from backend, and list of BU subfolders
-        // function getBUFolderId(dt) {
-        //     chosenBUFolderId = dt[0]
-        //     console.log(chosenBUFolderId)
-        //     var buList = dt[1];
-        //     console.log(buList)
-        //     //? Get list from backend 
-        //     var finaloptions = []
-        //     for (var i = 0; i < buList.length; i++) {
-        //         finaloptions[i] = `<option value=${buList[i]}>` + acronyms[buList[i]] + "</option>";
-        //     }
-        //     document.getElementById('BUDropdown').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Select a Business Unit (BU)
-        // </option>" +  ${finaloptions.join()} + </select>`;
-        // }
-
-        // //! Gets Value from BU Dropdown and get chosenFolderId and passes them to Backend, fetches & returns sheet id
-        // function selectBU() {
-        //     var buElement = document.getElementById('BU').value;
-
-        //     google.script.run
-        //         .withSuccessHandler(getMasterSheetId)
-        //         .withUserObject(this)
-        //         .mastersheetLocation(buElement, Object.values(chosenBUFolderId)[0]);
-
-
-        // }
-        // var chosenSheetId;
-
-        // function getMasterSheetId(dt) {
-        //     chosenSheetId = dt
-        //     console.log(chosenSheetId)
-        // }
+        function newdummyFunction(dt) {
+            console.log(dt);
+        }
     </script>
 </body>
 
