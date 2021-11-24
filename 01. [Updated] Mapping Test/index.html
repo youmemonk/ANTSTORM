@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>Assets and Templates</h1>
+
+    <!-- Cycle dropdown -->
+    <div>
+        <!-- <select name="Cycle" id="Cycle" onchange="selectCycle()"> -->
+        <select name="Cycle" id="Cycle">
+            <option value="" disabled selected>Select a Business cycle
+            </option>
+            <option value="Consulting">Consulting
+            </option>
+            <option value="Delivery">Delivery
+            </option>
+        </select>
+    </div>
+
+    <button onclick="buttonclick()">Click</button>
+
+    <!-- BU dropdown -->
+    <!-- <div id="BUDropdown">
+      <select>
+          <option value="" disabled selected>Select Business Unit (BU)
+          </option>
+      </select>
+  </div> -->
+
+    <script>
+        var rootSheetData;
+        //! [Updated with Google Sheets now instead of Drive]
+        //* Fetch data from Server Side
+        var delArray = [];
+        var consArray = [];
+        // var temp = [];
+        function dummyFunction(dt) {
+            console.log('Data Fetch Running...');
+            rootSheetData = dt;
+
+            // var cycleParameter = document.getElementById('Cycle').value;
+            //* Get Delivery Array
+            for (var i = 0; i < rootSheetData.length; i++) {
+                if (rootSheetData[i]["BU"].includes("Delivery")) {
+                    delArray.push(rootSheetData[i]);
+                }
+            }
+            // delArray = temp.slice();
+            //* Get Consulting Array
+            for (var i = 0; i < rootSheetData.length; i++) {
+                if (rootSheetData[i]["BU"].includes("Consulting")) {
+                    consArray.push(rootSheetData[i]);
+                }
+            }
+        }
+
+        //* Server Side Function Call
+        google.script.run
+            .withSuccessHandler(dummyFunction)
+            .withUserObject(this)
+            .RootFolderMapping();
+
+        var temp = [];
+        // var conArray = [];
+        //* Get Selected Cycle Data from RootSheet
+        function buttonclick() {
+            // var cycleParameter = document.getElementById('Cycle').value;
+            // // console.log(cycleParameter.value)
+            // // for(var i=0; i<dt) 
+            // // console.log(rootSheetData);
+            // for(var i=0; i<rootSheetData.length; i++){
+            //   if(rootSheetData[i]["BU"].includes(cycleParameter)){
+            //     temp.push(rootSheetData[i]);
+            //   }
+            // }
+            // cycleArray = temp.slice();
+            // temp = [];
+            // //* Cycle Array Contains selected Cycle Parameters only.
+            // console.log(cycleArray);
+            console.log(delArray);
+            console.log(consArray);
+        }
+
+
+
+
+
+
+        // var acronyms = {
+        //     "AI": "Artificial Intelligance",
+        //     "CE": "Cloud Engineering",
+        //     "D&A": "Data & Analytics",
+        //     "SE": "Software Engineering",
+        //     "WM": "Work Mordernisation"
+        // }
+        // //! Agenda:  Value from html -> Appscript -> return html -> console.log
+
+        // //! Gets Value from Cycle Dropdown, passes to Backend, fetches & returns folder id
+        // function selectCycle() {
+        //     var cycleParam = document.getElementById('Cycle').value;
+
+        //     google.script.run
+        //         .withSuccessHandler(getBUFolderId)
+        //         .withUserObject(this)
+        //         .cycle(cycleParam);
+        // }
+
+        // var chosenBUFolderId;
+        // // Get selected cycle folder id from backend, and list of BU subfolders
+        // function getBUFolderId(dt) {
+        //     chosenBUFolderId = dt[0]
+        //     console.log(chosenBUFolderId)
+        //     var buList = dt[1];
+        //     console.log(buList)
+        //     //? Get list from backend 
+        //     var finaloptions = []
+        //     for (var i = 0; i < buList.length; i++) {
+        //         finaloptions[i] = `<option value=${buList[i]}>` + acronyms[buList[i]] + "</option>";
+        //     }
+        //     document.getElementById('BUDropdown').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Select a Business Unit (BU)
+        // </option>" +  ${finaloptions.join()} + </select>`;
+        // }
+
+        // //! Gets Value from BU Dropdown and get chosenFolderId and passes them to Backend, fetches & returns sheet id
+        // function selectBU() {
+        //     var buElement = document.getElementById('BU').value;
+
+        //     google.script.run
+        //         .withSuccessHandler(getMasterSheetId)
+        //         .withUserObject(this)
+        //         .mastersheetLocation(buElement, Object.values(chosenBUFolderId)[0]);
+
+
+        // }
+        // var chosenSheetId;
+
+        // function getMasterSheetId(dt) {
+        //     chosenSheetId = dt
+        //     console.log(chosenSheetId)
+        // }
+    </script>
+</body>
+
+</html>
