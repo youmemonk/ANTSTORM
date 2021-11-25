@@ -13,15 +13,14 @@
     <h1>Assets and Templates</h1>
 
     <!-- Cycle dropdown -->
-    <div>
-        <select name="Cycle" id="Cycle" onchange="selectCycle()">
-            <!-- <select name="Cycle" id="Cycle"> -->
+    <div id="cycleDropdown">
+        <select>
             <option value="" disabled selected>Select a Business cycle
             </option>
-            <option value="Consulting">Consulting
+            <!-- <option value="Consulting">Consulting
             </option>
             <option value="Delivery">Delivery
-            </option>
+            </option> -->
         </select>
     </div>
 
@@ -34,6 +33,7 @@
             </option>
         </select>
     </div>
+
     <!-- Product dropdown -->
     <div id='productDropdown'>
         <select name="product" id="product">
@@ -42,7 +42,23 @@
         </select>
     </div>
 
+    <!-- Region dropdown -->
+    <div id='regionDropdown'>
+        <select name="region" id="region">
+            <option value="" disabled selected>Select the Region
+            </option>
+        </select>
+    </div>
+
+    <!-- Test filtered data -->
+    <div id=testFilteredData>
+
+    </div>
+
     <script>
+        // Region list
+        var regionList = ['AMER', 'APAC', 'EMEA', 'INDIA']
+
         var rootSheetData;
         //! [Updated with Google Sheets now instead of Drive]
         //* Fetch data from Server Side
@@ -58,6 +74,7 @@
             rootSheetData = dt[0];
             buSheetData = dt[1];
             productSheetData = dt[2];
+            regionSheetData = dt[3]
 
             // console.log(productSheetData)
 
@@ -87,6 +104,9 @@
             // console.log(buNameMaping)
             // console.log(productNameMaping)
 
+            // Populate cycle dropdown after fetching mapping data
+            document.getElementById('cycleDropdown').innerHTML =
+                '<select name="Cycle" id="Cycle" onchange="selectCycle()"><option value="" disabled selected>Select a Business cycle</option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>'
         }
 
         //* Server Side Function Call
@@ -142,23 +162,24 @@
 
             var list = [];
             for (var i = 0; i < buList.length; i++) {
-                list.push(`<option value=${buList[i][0]}>` + buNameMaping[buList[i][0]] + "</option>");
+                list.push(`<option value="${buList[i][0]}">` + buNameMaping[buList[i][0]] + "</option>");
             }
             // document.getElementById("BUDropdown").innerHTML = list.join();
-            //       document.getElementById('BUDropdown').innerHTML = `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)
-            // </option>" +  ${list.join()} + </select>`;
-            document.getElementById('BUDropdown').innerHTML = '<select><option>1</option><option>2</option></select>'
+            // console.log(list.join())
+            document.getElementById('BUDropdown').innerHTML =
+                `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)</option>" + ${list.join()} + </select>`;
+
+            // document.getElementById('BUDropdown').innerHTML = '<select><option>1</option><option>2</option></select>'
             // console.log(list)
-            list = [];
+            // list = [];
 
             // console.log(productSheetData);
-
             // console.log(document.getElementById('BUDropdown').value)
         }
 
         function selectBU() {
-            // console.log(document.getElementById('BUDropdown').value);
-            var BUparam = document.getElementById('BUDropdown').value;
+            // console.log(document.getElementById('BU').value);
+            var BUparam = document.getElementById('BU').value;
             var sheetIndex;
             for (var i = 0; i < buList.length; i++) {
                 if (buList[i][0] == BUparam) {
@@ -203,20 +224,59 @@
             // Populate product dropdown from uniqueAvailableProds
             var product = []
             for (var i = 0; i < uniqueAvailableProds.length; i++) {
-                product[i] = `<option value=${uniqueAvailableProds[i]}>` + uniqueAvailableProds[i] + "</option>";
+                product[i] = `<option value="${uniqueAvailableProds[i]}">` + uniqueAvailableProds[i] + "</option>";
             }
+            // console.log(product)
             document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
       </option>" +  ${product.join()} + </select>`;
         }
 
+        var dataFromProductFilter = []
+
         function selectProduct() {
+            dataFromProductFilter = []
             // console.log(document.getElementById('product').value)
             for (var i = 0; i < selectedSheetData.length; i++) {
                 if (selectedSheetData[i]['Product'] == document.getElementById('product').value) {
-                    console.log(selectedSheetData[i])
+                    // console.log(selectedSheetData[i])
+                    dataFromProductFilter.push(selectedSheetData[i])
                 }
             }
+            // Populate region dropdown from hardcoded regionSheetData
+            var region = []
+            // console.log(regionSheetData)
+            for (var i = 0; i < regionSheetData.length; i++) {
+                region[i] = `<option value=${regionSheetData[i]['Region']}>` + regionSheetData[i]['Region'] +
+                    "</option>";
+            }
+            document.getElementById('regionDropdown').innerHTML = `<select id="region" onchange="selectRegion()"> + "<option value="" disabled selected>Choose a Region
+      </option>" +  ${region.join()} + </select>`;
+
+            // console.log(dataFromProductFilter)
         }
+
+        var dataFromRegionFilter = []
+
+        function selectRegion() {
+            dataFromRegionFilter = []
+            // console.log(document.getElementById('region').value)
+            var regionIndex = document.getElementById('region').value
+            // document.getElementById('testFilteredData').innerHTML = typeof(dataFromProductFilter)
+            for (var i = 0; i < dataFromProductFilter.length; i++) {
+                if (dataFromProductFilter[i]['Region'].toUpperCase() == 'ALL' || dataFromProductFilter[i]['Region'] ==
+                    regionIndex) {
+                    // console.log(dataFromProductFilter[i])
+                    // dataFromProductFilter.push(dataFromProductFilter[i])
+                    dataFromRegionFilter.push(dataFromProductFilter[i])
+                    // document.getElementById('testFilteredData').innerHTML = dataFromProductFilter[i]['Document Name & Link']
+                }
+                // console.log(dataFromProductFilter[i]['Region'].toUpperCase())
+            }
+            console.log(dataFromRegionFilter)
+        }
+
+        //Table should be populated at this step
+        //Search bar appears
     </script>
 </body>
 
