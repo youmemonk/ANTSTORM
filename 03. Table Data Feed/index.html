@@ -52,10 +52,18 @@
 
     </div>
 
-    <script>
-        // Region list
-        var regionList = ['AMER', 'APAC', 'EMEA', 'INDIA']
 
+    <div id="table">
+
+    </div>
+
+
+
+
+
+
+
+    <script>
         var rootSheetData;
         //! [Updated with Google Sheets now instead of Drive]
         //* Fetch data from Server Side
@@ -64,8 +72,7 @@
 
         var buNameMaping = {}
         var productNameMaping = {}
-        // var commonArray = [];
-        // var temp = [];
+
         function dummyFunction(dt) {
             console.log('Data Fetch Running...');
             rootSheetData = dt[0];
@@ -73,9 +80,6 @@
             productSheetData = dt[2];
             regionSheetData = dt[3]
 
-            // console.log(productSheetData)
-
-            // var cycleParameter = document.getElementById('Cycle').value;
             //* Get Delivery Array
             for (var i = 0; i < rootSheetData.length; i++) {
                 if (rootSheetData[i]["BU"].includes("Delivery")) {
@@ -98,8 +102,7 @@
             for (var i = 0; i < productSheetData.length; i++) {
                 productNameMaping[productSheetData[i]["Product Code"]] = productSheetData[i]["Product Name"]
             }
-            // console.log(buNameMaping)
-            // console.log(productNameMaping)
+
 
             // Populate cycle dropdown after fetching mapping data
             document.getElementById('cycleDropdown').innerHTML =
@@ -120,9 +123,6 @@
         function selectCycle() {
             var cycleParameter = document.getElementById("Cycle").value;
             var commonarray = [];
-            // if(cycleParameter == 'Delivery'){
-            //   var trial =
-            // }
 
             if (cycleParameter == "Delivery") {
 
@@ -225,14 +225,11 @@
 
         function selectRegion() {
             dataFromRegionFilter = []
-            // console.log(document.getElementById('region').value)
             var regionIndex = document.getElementById('region').value
-            // document.getElementById('testFilteredData').innerHTML = typeof(dataFromProductFilter)
             for (var i = 0; i < dataFromProductFilter.length; i++) {
                 if (dataFromProductFilter[i]['Region'].toUpperCase() == 'ALL' || dataFromProductFilter[i]['Region'] ==
                     regionIndex) {
                     dataFromRegionFilter.push(dataFromProductFilter[i])
-
                 }
             }
 
@@ -244,6 +241,7 @@
 
 
         var dataFromSearchFilter = []
+        var header = ""
 
         function searchByText() {
             dataFromSearchFilter = []
@@ -253,12 +251,39 @@
                 if (dataFromRegionFilter[i]['Document Name & Link'].toLowerCase().includes(searchText)) {
                     dataFromSearchFilter.push(dataFromRegionFilter[i])
                 }
+
             }
-            console.log(dataFromSearchFilter)
+            // console.log(dataFromSearchFilter)
+
+
+            var tableData = dataFromSearchFilter;
+            //! Push Header
+            header =
+                "<table id=\"tableData\"><thead> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = \"tableBody\" ><!-- Data comes here--></tbody></table>"
+            document.getElementById('table').innerHTML = header;
+
+            var temp = [];
+            if (tableData.length > 0) {
+                tableData.forEach((itemData) => {
+                    temp += "<tr>";
+                    temp += "<td>p</td>";
+                    temp += "<td>" + itemData["Document Name & Link"] + "</td>";
+                    temp += "<td>a</td>";
+                    temp += "<td>" + itemData["Document Description"] + "</td>";
+                    temp += "<td>" + itemData["Product"] + "</td>";
+                    i++;
+                });
+            } else {
+                var temp = errorfunction();
+            }
+            document.getElementById("tableBody").innerHTML = temp;
+        }
+
+        function errorfunction() {
+            var e = "No Records Found";
+            return e;
         }
     </script>
 </body>
 
 </html>
-
-
