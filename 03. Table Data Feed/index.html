@@ -52,10 +52,15 @@
 
     </div>
 
-
+    <button id="view" onclick="dataPopulation()">View Console Log</button>
     <div id="table">
-
+        <!-- <h1>This is a Table</h1> -->
+        <!-- <table id="tableData"> -->
+        <!-- All Data Comes Inside this -->
+        <!-- </table> -->
     </div>
+
+    <!-- <div id="testing"></div> -->
 
 
 
@@ -72,7 +77,8 @@
 
         var buNameMaping = {}
         var productNameMaping = {}
-
+        // var commonArray = [];
+        // var temp = [];
         function dummyFunction(dt) {
             console.log('Data Fetch Running...');
             rootSheetData = dt[0];
@@ -80,6 +86,9 @@
             productSheetData = dt[2];
             regionSheetData = dt[3]
 
+            // console.log(productSheetData)
+
+            // var cycleParameter = document.getElementById('Cycle').value;
             //* Get Delivery Array
             for (var i = 0; i < rootSheetData.length; i++) {
                 if (rootSheetData[i]["BU"].includes("Delivery")) {
@@ -102,7 +111,8 @@
             for (var i = 0; i < productSheetData.length; i++) {
                 productNameMaping[productSheetData[i]["Product Code"]] = productSheetData[i]["Product Name"]
             }
-
+            // console.log(buNameMaping)
+            // console.log(productNameMaping)
 
             // Populate cycle dropdown after fetching mapping data
             document.getElementById('cycleDropdown').innerHTML =
@@ -123,6 +133,9 @@
         function selectCycle() {
             var cycleParameter = document.getElementById("Cycle").value;
             var commonarray = [];
+            // if(cycleParameter == 'Delivery'){
+            //   var trial =
+            // }
 
             if (cycleParameter == "Delivery") {
 
@@ -224,12 +237,16 @@
         var dataFromRegionFilter = []
 
         function selectRegion() {
+            // document.getElementById('table') = "<h1>random</h1>";
             dataFromRegionFilter = []
+            // console.log(document.getElementById('region').value)
             var regionIndex = document.getElementById('region').value
+            // document.getElementById('testFilteredData').innerHTML = typeof(dataFromProductFilter)
             for (var i = 0; i < dataFromProductFilter.length; i++) {
                 if (dataFromProductFilter[i]['Region'].toUpperCase() == 'ALL' || dataFromProductFilter[i]['Region'] ==
                     regionIndex) {
                     dataFromRegionFilter.push(dataFromProductFilter[i])
+
                 }
             }
 
@@ -237,6 +254,7 @@
             //Search bar and button appears
             document.getElementById('searchBarBtn').innerHTML =
                 '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()"> <button onclick="searchByText()">Search</button>'
+            dataPopulation(dataFromRegionFilter);
         }
 
 
@@ -244,6 +262,7 @@
         var header = ""
 
         function searchByText() {
+
             dataFromSearchFilter = []
             var searchText = document.getElementById('searchText').value.toLowerCase()
             for (var i = 0; i < dataFromRegionFilter.length; i++) {
@@ -254,9 +273,18 @@
 
             }
             // console.log(dataFromSearchFilter)
+            dataPopulation(dataFromSearchFilter);
+        }
 
+        function errorfunction() {
+            var e = "No Records Found";
+            return e;
+        }
 
-            var tableData = dataFromSearchFilter;
+        function dataPopulation(e) {
+
+            // console.log(dataFromRegionFilter)
+            var tableData = e;
             //! Push Header
             header =
                 "<table id=\"tableData\"><thead> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = \"tableBody\" ><!-- Data comes here--></tbody></table>"
@@ -267,21 +295,22 @@
                 tableData.forEach((itemData) => {
                     temp += "<tr>";
                     temp += "<td>p</td>";
+                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
                     temp += "<td>a</td>";
+                    // temp += "<td>" +
+                    //   `<a href=${itemData["Document Link"]}  target="_blank">
+                    //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
+                    //                     alt="Err" width="30" height="auto"></a>` +
+                    //   "</td>";
                     temp += "<td>" + itemData["Document Description"] + "</td>";
                     temp += "<td>" + itemData["Product"] + "</td>";
-                    i++;
+                    // i++;
                 });
             } else {
                 var temp = errorfunction();
             }
             document.getElementById("tableBody").innerHTML = temp;
-        }
-
-        function errorfunction() {
-            var e = "No Records Found";
-            return e;
         }
     </script>
 </body>
