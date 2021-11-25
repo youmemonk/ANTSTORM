@@ -17,14 +17,8 @@
         <select>
             <option value="" disabled selected>Select a Business cycle
             </option>
-            <!-- <option value="Consulting">Consulting
-            </option>
-            <option value="Delivery">Delivery
-            </option> -->
         </select>
     </div>
-
-    <!-- <button onclick="buttonclick()">Click</button> -->
 
     <!-- BU dropdown -->
     <div id="BUDropdown">
@@ -49,6 +43,9 @@
             </option>
         </select>
     </div>
+
+    <!-- Search bar and button -->
+    <div id='searchBarBtn'></div>
 
     <!-- Test filtered data -->
     <div id=testFilteredData>
@@ -116,10 +113,6 @@
             .RootFolderMapping();
 
         //* Get Selected Cycle Data from RootSheet
-        // function buttonclick(){
-        //   console.log(delArray);
-        //   console.log(consArray);
-        // }
 
         var temp2 = [];
         var buList = [];
@@ -132,12 +125,9 @@
             // }
 
             if (cycleParameter == "Delivery") {
-                // console.log(delArray);
-                // var trial = delArray[0]["BU"].split(' ');
-                // console.log(trial[0]);
+
                 for (var i = 0; i < delArray.length; i++) {
-                    // temp2[0][i].push(delArray[i]["BU"].split(' ')[0]);
-                    // temp2[1][i].push(delArray[i]["Template File ID"])
+
                     temp2.push([delArray[i]["BU"].split(' ')[0], delArray[i]["Template File ID"]]);
                 }
                 // console.log(temp2)
@@ -157,8 +147,6 @@
 
             //* Feed Data to next dropdown
             //! [IMPORTANT] Confirm acronyms from mapping sheet and then push
-            // console.log(buSheetData[6])
-
 
             var list = [];
             for (var i = 0; i < buList.length; i++) {
@@ -168,13 +156,6 @@
             // console.log(list.join())
             document.getElementById('BUDropdown').innerHTML =
                 `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)</option>" + ${list.join()} + </select>`;
-
-            // document.getElementById('BUDropdown').innerHTML = '<select><option>1</option><option>2</option></select>'
-            // console.log(list)
-            // list = [];
-
-            // console.log(productSheetData);
-            // console.log(document.getElementById('BUDropdown').value)
         }
 
         function selectBU() {
@@ -192,33 +173,18 @@
                 .fetchData(sheetIndex)
 
             //! [IMPORTANT] If index == null -> Alert No sheet Found
-            // console.log(index)
-            // return sheetIndex;
-
-            // 
-            //       // Populate product dropdown from productList
-            //       var product = []
-            //       for (var i = 0; i < productList.length; i++) {
-            //           product[i] = `<option value=${productList[i]}>` + productList[i] + "</option>";
-            //       }
-            //       document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
-            // </option>" +  ${product.join()} + </select>`;
         }
 
         var selectedSheetData;
 
         function newdummyFunction(dt) {
-            // console.log(dt);
             selectedSheetData = dt
-            // console.log(dt)
             // Search available product codes in fetched sheet
             var availableProduct = []
             for (var i = 0; i < selectedSheetData.length; i++) {
                 // console.log(selectedSheetData[i]['Product'])
                 availableProduct.push(selectedSheetData[i]['Product'])
             }
-            // console.log(availableProduct)
-            // console.log([...new Set(availableProduct)])
             var uniqueAvailableProds = [...new Set(availableProduct)]
 
             // Populate product dropdown from uniqueAvailableProds
@@ -226,7 +192,7 @@
             for (var i = 0; i < uniqueAvailableProds.length; i++) {
                 product[i] = `<option value="${uniqueAvailableProds[i]}">` + uniqueAvailableProds[i] + "</option>";
             }
-            // console.log(product)
+
             document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
       </option>" +  ${product.join()} + </select>`;
         }
@@ -238,13 +204,13 @@
             // console.log(document.getElementById('product').value)
             for (var i = 0; i < selectedSheetData.length; i++) {
                 if (selectedSheetData[i]['Product'] == document.getElementById('product').value) {
-                    // console.log(selectedSheetData[i])
+
                     dataFromProductFilter.push(selectedSheetData[i])
                 }
             }
             // Populate region dropdown from hardcoded regionSheetData
             var region = []
-            // console.log(regionSheetData)
+
             for (var i = 0; i < regionSheetData.length; i++) {
                 region[i] = `<option value=${regionSheetData[i]['Region']}>` + regionSheetData[i]['Region'] +
                     "</option>";
@@ -265,18 +231,31 @@
             for (var i = 0; i < dataFromProductFilter.length; i++) {
                 if (dataFromProductFilter[i]['Region'].toUpperCase() == 'ALL' || dataFromProductFilter[i]['Region'] ==
                     regionIndex) {
-                    // console.log(dataFromProductFilter[i])
-                    // dataFromProductFilter.push(dataFromProductFilter[i])
                     dataFromRegionFilter.push(dataFromProductFilter[i])
-                    // document.getElementById('testFilteredData').innerHTML = dataFromProductFilter[i]['Document Name & Link']
+
                 }
-                // console.log(dataFromProductFilter[i]['Region'].toUpperCase())
             }
-            console.log(dataFromRegionFilter)
+
+            //Table should be populated at this step
+            //Search bar and button appears
+            document.getElementById('searchBarBtn').innerHTML =
+                '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()"> <button onclick="searchByText()">Search</button>'
         }
 
-        //Table should be populated at this step
-        //Search bar appears
+
+        var dataFromSearchFilter = []
+
+        function searchByText() {
+            dataFromSearchFilter = []
+            var searchText = document.getElementById('searchText').value.toLowerCase()
+            for (var i = 0; i < dataFromRegionFilter.length; i++) {
+
+                if (dataFromRegionFilter[i]['Document Name & Link'].toLowerCase().includes(searchText)) {
+                    dataFromSearchFilter.push(dataFromRegionFilter[i])
+                }
+            }
+            console.log(dataFromSearchFilter)
+        }
     </script>
 </body>
 
