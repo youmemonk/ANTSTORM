@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>Assets and Templates</h1>
+
+    <!-- Cycle dropdown -->
+    <div id="cycleDropdown">
+        <select>
+            <option value="" disabled selected>Select a Business cycle
+            </option>
+        </select>
+    </div>
+
+    <!-- BU dropdown -->
+    <div id="BUDropdown">
+        <select>
+            <option value="" disabled selected>Select Business Unit (BU)
+            </option>
+        </select>
+    </div>
+
+    <!-- Product dropdown -->
+    <div id='productDropdown'>
+        <select name="product" id="product">
+            <option value="" disabled selected>Select the Product
+            </option>
+        </select>
+    </div>
+
+    <!-- Region dropdown -->
+    <div id='regionDropdown'>
+        <select name="region" id="region">
+            <option value="" disabled selected>Select the Region
+            </option>
+        </select>
+    </div>
+
+    <!-- Search bar and button -->
+    <div id='searchBarBtn'></div>
+
+    <!-- Test filtered data -->
+    <div id=testFilteredData>
+
+    </div>
+
+    <!-- <button id="view" onclick="dataPopulation()">View Console Log</button> -->
+    <div id="table">
+        <!-- <h1>This is a Table</h1> -->
+        <!-- <table id="tableData"> -->
+        <!-- All Data Comes Inside this -->
+        <!-- </table> -->
+    </div>
+
+    <!-- <div id="testing"></div> -->
+    <button onclick="createTemplate()">Create Template</button>
+    <button onclick="checked()">Check for Checked Array</button>
+
+
+
+
+
+
+    <script>
+        var rootSheetData;
+        //! [Updated with Google Sheets now instead of Drive]
+        //* Fetch data from Server Side
+        var delArray = [];
+        var consArray = [];
+
+        var buNameMaping = {}
+        var productNameMaping = {}
+        // var commonArray = [];
+        // var temp = [];
+        function dummyFunction(dt) {
+            console.log('Data Fetch Running...');
+            rootSheetData = dt[0];
+            buSheetData = dt[1];
+            productSheetData = dt[2];
+            regionSheetData = dt[3]
+
+            // console.log(productSheetData)
+
+            // var cycleParameter = document.getElementById('Cycle').value;
+            //* Get Delivery Array
+            for (var i = 0; i < rootSheetData.length; i++) {
+                if (rootSheetData[i]["BU"].includes("Delivery")) {
+                    delArray.push(rootSheetData[i]);
+                }
+            }
+            // delArray = temp.slice();
+            //* Get Consulting Array
+            for (var i = 0; i < rootSheetData.length; i++) {
+                if (rootSheetData[i]["BU"].includes("Consulting")) {
+                    consArray.push(rootSheetData[i]);
+                }
+            }
+
+            // Convert buSheetData to BU code: BU full name mapping object
+            for (var i = 0; i < buSheetData.length; i++) {
+                buNameMaping[buSheetData[i]["BU Code"]] = buSheetData[i]["Business Unit (As received from SFDC)"]
+            }
+            // Convert productSheetData to Product code: Product full name mapping object
+            for (var i = 0; i < productSheetData.length; i++) {
+                productNameMaping[productSheetData[i]["Product Code"]] = productSheetData[i]["Product Name"]
+            }
+            // console.log(buNameMaping)
+            // console.log(productNameMaping)
+
+            // Populate cycle dropdown after fetching mapping data
+            document.getElementById('cycleDropdown').innerHTML =
+                '<select name="Cycle" id="Cycle" onchange="selectCycle()"><option value="" disabled selected>Select a Business cycle</option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>'
+        }
+
+        //* Server Side Function Call
+        google.script.run
+            .withSuccessHandler(dummyFunction)
+            .withUserObject(this)
+            .RootFolderMapping();
+
+        //* Get Selected Cycle Data from RootSheet
+
+        var temp2 = [];
+        var buList = [];
+
+        function selectCycle() {
+            var cycleParameter = document.getElementById("Cycle").value;
+            var commonarray = [];
+            // if(cycleParameter == 'Delivery'){
+            //   var trial =
+            // }
+
+            if (cycleParameter == "Delivery") {
+
+                for (var i = 0; i < delArray.length; i++) {
+
+                    temp2.push([delArray[i]["BU"].split(' ')[0], delArray[i]["Template File ID"]]);
+                }
+                // console.log(temp2)
+                buList = temp2.slice();
+                temp2 = []; //* empty temp
+                // console.log(buList)
+            } else {
+                // console.log(consArray);
+                for (var i = 0; i < consArray.length; i++) {
+                    // temp2.push(consArray[i]["BU"].split(' ')[0]);
+                    temp2.push([consArray[i]["BU"].split(' ')[0], consArray[i]["Template File ID"]]);
+                }
+                buList = temp2.slice();
+                temp2 = []; //* empty temp
+                // console.log(buList)
+            }
+
+            //* Feed Data to next dropdown
+            //! [IMPORTANT] Confirm acronyms from mapping sheet and then push
+
+            var list = [];
+            for (var i = 0; i < buList.length; i++) {
+                list.push(`<option value="${buList[i][0]}">` + buNameMaping[buList[i][0]] + "</option>");
+            }
+            // document.getElementById("BUDropdown").innerHTML = list.join();
+            // console.log(list.join())
+            document.getElementById('BUDropdown').innerHTML =
+                `<select id="BU" onchange="selectBU()"> + "<option value="" disabled selected>Choose a Business Unit (BU)</option>" + ${list.join()} + </select>`;
+        }
+
+        function selectBU() {
+            // console.log(document.getElementById('BU').value);
+            var BUparam = document.getElementById('BU').value;
+            var sheetIndex;
+            for (var i = 0; i < buList.length; i++) {
+                if (buList[i][0] == BUparam) {
+                    sheetIndex = buList[i][1];
+                }
+            }
+            google.script.run
+                .withSuccessHandler(newdummyFunction)
+                .withUserObject(this)
+                .fetchData(sheetIndex)
+
+            //! [IMPORTANT] If index == null -> Alert No sheet Found
+        }
+
+        var selectedSheetData;
+
+        function newdummyFunction(dt) {
+            selectedSheetData = dt
+            // Search available product codes in fetched sheet
+            var availableProduct = []
+            for (var i = 0; i < selectedSheetData.length; i++) {
+                // console.log(selectedSheetData[i]['Product'])
+                availableProduct.push(selectedSheetData[i]['Product'])
+            }
+            var uniqueAvailableProds = [...new Set(availableProduct)]
+
+            // Populate product dropdown from uniqueAvailableProds
+            var product = []
+            for (var i = 0; i < uniqueAvailableProds.length; i++) {
+                product[i] = `<option value="${uniqueAvailableProds[i]}">` + uniqueAvailableProds[i] + "</option>";
+            }
+
+            document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
+      </option>" +  ${product.join()} + </select>`;
+        }
+
+        var dataFromProductFilter = []
+
+        function selectProduct() {
+            dataFromProductFilter = []
+            // console.log(document.getElementById('product').value)
+            for (var i = 0; i < selectedSheetData.length; i++) {
+                if (selectedSheetData[i]['Product'] == document.getElementById('product').value) {
+
+                    dataFromProductFilter.push(selectedSheetData[i])
+                }
+            }
+            // Populate region dropdown from hardcoded regionSheetData
+            var region = []
+
+            for (var i = 0; i < regionSheetData.length; i++) {
+                region[i] = `<option value=${regionSheetData[i]['Region']}>` + regionSheetData[i]['Region'] +
+                    "</option>";
+            }
+            document.getElementById('regionDropdown').innerHTML = `<select id="region" onchange="selectRegion()"> + "<option value="" disabled selected>Choose a Region
+      </option>" +  ${region.join()} + </select>`;
+
+            // console.log(dataFromProductFilter)
+        }
+
+        var dataFromRegionFilter = []
+
+        function selectRegion() {
+            // document.getElementById('table') = "<h1>random</h1>";
+            dataFromRegionFilter = []
+            // console.log(document.getElementById('region').value)
+            var regionIndex = document.getElementById('region').value
+            // document.getElementById('testFilteredData').innerHTML = typeof(dataFromProductFilter)
+            for (var i = 0; i < dataFromProductFilter.length; i++) {
+                if (dataFromProductFilter[i]['Region'].toUpperCase() == 'ALL' || dataFromProductFilter[i]['Region'] ==
+                    regionIndex) {
+                    dataFromRegionFilter.push(dataFromProductFilter[i])
+
+                }
+            }
+
+            //Table should be populated at this step
+            //Search bar and button appears
+            document.getElementById('searchBarBtn').innerHTML =
+                '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()"> <button onclick="searchByText()">Search</button>'
+            dataPopulation(dataFromRegionFilter);
+        }
+
+
+        var dataFromSearchFilter = []
+        var header = ""
+
+        function searchByText() {
+
+            dataFromSearchFilter = []
+            var searchText = document.getElementById('searchText').value.toLowerCase()
+            for (var i = 0; i < dataFromRegionFilter.length; i++) {
+
+                if (dataFromRegionFilter[i]['Document Name & Link'].toLowerCase().includes(searchText)) {
+                    dataFromSearchFilter.push(dataFromRegionFilter[i])
+                }
+
+            }
+            // console.log(dataFromSearchFilter)
+            dataPopulation(dataFromSearchFilter);
+        }
+
+        function errorfunction() {
+            var e = "No Records Found";
+            return e;
+        }
+        var dataInputToTable = [];
+
+        function dataPopulation(e) {
+
+            // console.log(dataFromRegionFilter)
+            dataInputToTable = e;
+            var tableData = e;
+            //! Push Header
+            header =
+                "<table id=\"tableData\"><thead> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = \"tableBody\" ><!-- Data comes here--></tbody></table>"
+            document.getElementById('table').innerHTML = header;
+
+            var temp = [];
+            var i = 0;
+            if (tableData.length > 0) {
+                tableData.forEach((itemData) => {
+                    temp += "<tr>";
+                    // temp += "<td>p</td>";
+                    temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
+                    temp += "<td>" + itemData["Document Name & Link"] + "</td>";
+                    temp += "<td>a</td>";
+                    // temp += "<td>" +
+                    //   `<a href=${itemData["Document Link"]}  target="_blank">
+                    //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
+                    //                     alt="Err" width="30" height="auto"></a>` +
+                    //   "</td>";
+                    temp += "<td>" + itemData["Document Description"] + "</td>";
+                    temp += "<td>" + itemData["Product"] + "</td>";
+                    i++;
+                });
+            } else {
+                var temp = errorfunction();
+            }
+            document.getElementById("tableBody").innerHTML = temp;
+            // return tableData;
+        }
+
+        function templateDummy(dt) {
+            // console.log('b');
+            // console.log(dt)
+        }
+
+        function createTemplate() {
+            google.script.run
+                .withSuccessHandler(templateDummy)
+                .withUserObject(this)
+                .createTemplate(checkList);
+
+            // console.log(dataInputToTable);
+        }
+
+        var checkList = [];
+
+        function checked() {
+            checkList = [];
+            // document.getElementById('multiple-0').value
+            for (var i = 0; i < dataInputToTable.length; i++) {
+                if (document.getElementById(`multiple-${i}`).checked) {
+                    // checkList.push(dataInputToTable[i]);
+                    // console.log(document.getElementById(`multiple-0`).checked);
+                    // console.log(dataInputToTable[i])
+                    checkList.push(dataInputToTable[i])
+                }
+                // checkList.push(document.getElementById(`multiple-${i}`).checked)
+            }
+            // console.log(document.getElementById(`multiple-0`).checked);
+            // console.log(checkList);
+
+        }
+    </script>
+</body>
+
+</html>
