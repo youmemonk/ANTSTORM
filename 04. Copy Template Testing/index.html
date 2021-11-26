@@ -302,20 +302,49 @@
             var i = 0;
             if (tableData.length > 0) {
                 tableData.forEach((itemData) => {
+                    //  var pp = itemData
                     temp += "<tr>";
                     // temp += "<td>p</td>";
                     temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
+                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}" 
+                    // onchange="stickyheaddsadaer(this, ${i},${pp})"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
                     // temp += "<td>a</td>";
                     // temp += "<td>" +
+                    var checkDoc = /document/g
+                    var checkSheet = /spread/g
+                    var checkPpt = /presentation/g
+                    var checkForm = /form/g
+
+                    if (checkDoc.test(itemData["Document Link"])) {
+                        image = "https://img.icons8.com/color/48/000000/google-docs--v1.png";
+                    } else if (checkSheet.test(itemData["Document Link"])) {
+                        image = "https://img.icons8.com/color/48/000000/google-sheets.png";
+                    } else if (checkPpt.test(itemData["Document Link"])) {
+                        image = "https://img.icons8.com/color/48/000000/google-slides.png"
+                    } else if (checkForm.test(itemData['Document Link'])) {
+                        image = "https://img.icons8.com/color/50/000000/google-forms-new-logo-1.png"
+                    }
+                    // Change this to error doc image
+                    else {
+                        image = "https://img.icons8.com/color/48/fa314a/google-drawing.png"
+                    }
+
+                    // console.log(typeof(itemData["Document Link"]))
+
+                    temp += "<td>" +
+                        `<a href=${itemData["Document Link"]}  target="_blank">
+                                        <img src=${image}
+                                        alt="Err" width="30" height="auto"></a>` +
+                        "</td>";
                     //   `<a href=${itemData["Document Link"]}  target="_blank">
                     //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
                     //                     alt="Err" width="30" height="auto"></a>` +
                     //   "</td>";
-                    temp += "<td>" +
-                        `<a href=${itemData["Document Link"]}  target="_blank">
-                                        <img src="https://img.icons8.com/color/48/000000/google-docs--v1.png" width="30" height="auto"/></a>` +
-                        "</td>";
+                    // temp += "<td>" +
+                    //   `<a href=${itemData["Document Link"]}  target="_blank">
+                    //                     <img src="https://img.icons8.com/color/48/000000/google-docs--v1.png" width="30" height="auto"/></a>` +
+                    //   "</td>";
                     temp += "<td>" + itemData["Document Description"] + "</td>";
                     temp += "<td>" + itemData["Product"] + "</td>";
                     i++;
@@ -326,6 +355,23 @@
             document.getElementById("tableBody").innerHTML = temp;
             // return tableData;
         }
+
+        // Testing for onchange function for checkbox trigger
+        // var checkedListArray = []
+        // function stickyheaddsadaer(obj, rowData) {
+        //   if(obj.checked){
+        //     // alert("Yes checked"); //when checked
+        //     // var checkedRow = document.getElementById(`multiple-${id}`)
+        //     // checkedListArray.push()
+        //     // alert(Object.values(obj)[0])
+
+        //     console.log(rowData)
+
+        //     // ("#page-header-inner").addClass("sticky");
+        //   }else{
+        //     alert("Not checked"); //when not checked
+        //   }
+        // }
 
         function templateDummy(dt) {
             // console.log('b');
