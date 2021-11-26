@@ -52,7 +52,7 @@
 
     </div>
 
-    <button id="view" onclick="dataPopulation()">View Console Log</button>
+    <!-- <button id="view" onclick="dataPopulation()">View Console Log</button> -->
     <div id="table">
         <!-- <h1>This is a Table</h1> -->
         <!-- <table id="tableData"> -->
@@ -291,17 +291,35 @@
             document.getElementById('table').innerHTML = header;
 
             var temp = [];
+            var image = "";
             if (tableData.length > 0) {
                 tableData.forEach((itemData) => {
+                    // console.log(itemData)
                     temp += "<tr>";
                     temp += "<td>p</td>";
                     // temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
                     temp += "<td>a</td>";
+
+                    // if(itemData["Document Link"].indexOf("document") >= 0){
+                    //   image = "https://img.icons8.com/color/48/000000/google-docs--v1.png";
+                    // }
+                    // else if(itemData["Document Link"].indexOf("spreadsheets") >= 0){
+                    //   image = "https://img.icons8.com/color/48/000000/google-sheets.png";
+                    // }
+                    // else if(itemData["Document Link"].indexOf("presentation") >= 0){
+                    //   image = "https://img.icons8.com/color/48/000000/google-slides.png"
+                    // }
+                    // else{
+                    //   image = "https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/64/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-4.png"
+                    // }
+
+                    // console.log(typeof(itemData["Document Link"]))
+
                     // temp += "<td>" +
                     //   `<a href=${itemData["Document Link"]}  target="_blank">
-                    //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
-                    //                     alt="Err" width="30" height="auto"></a>` +
+                    //                     <img src=${image}
+                    //                     alt="Err" width="25" height="auto"></a>` +
                     //   "</td>";
                     temp += "<td>" + itemData["Document Description"] + "</td>";
                     temp += "<td>" + itemData["Product"] + "</td>";

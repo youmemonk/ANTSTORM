@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
+
+    <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet"> -->
+    <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
 </head>
 
 <body>
@@ -62,7 +67,7 @@
 
     <!-- <div id="testing"></div> -->
     <button onclick="createTemplate()">Create Template</button>
-    <button onclick="checked()">Check for Checked Array</button>
+    <!-- <button onclick="checked()">Check for Checked Array</button> -->
 
 
 
@@ -301,12 +306,16 @@
                     // temp += "<td>p</td>";
                     temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
-                    temp += "<td>a</td>";
+                    // temp += "<td>a</td>";
                     // temp += "<td>" +
                     //   `<a href=${itemData["Document Link"]}  target="_blank">
                     //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
                     //                     alt="Err" width="30" height="auto"></a>` +
                     //   "</td>";
+                    temp += "<td>" +
+                        `<a href=${itemData["Document Link"]}  target="_blank">
+                                        <img src="https://img.icons8.com/color/48/000000/google-docs--v1.png" width="30" height="auto"/></a>` +
+                        "</td>";
                     temp += "<td>" + itemData["Document Description"] + "</td>";
                     temp += "<td>" + itemData["Product"] + "</td>";
                     i++;
@@ -321,15 +330,28 @@
         function templateDummy(dt) {
             // console.log('b');
             // console.log(dt)
+            console.log("Finished...")
+        }
+
+        function errorDummy() {
+            // var i= 5;
+            // console.log()
+            console.log('Failed');
         }
 
         function createTemplate() {
+            checked(); //! Function Call to get the CheckList
+            console.log("Starting...")
             google.script.run
                 .withSuccessHandler(templateDummy)
+                .withFailureHandler(errorDummy)
                 .withUserObject(this)
                 .createTemplate(checkList);
 
             // console.log(dataInputToTable);
+            // console.log("Finished...")
+
+
         }
 
         var checkList = [];
@@ -347,7 +369,7 @@
                 // checkList.push(document.getElementById(`multiple-${i}`).checked)
             }
             // console.log(document.getElementById(`multiple-0`).checked);
-            // console.log(checkList);
+            console.log(checkList);
 
         }
     </script>

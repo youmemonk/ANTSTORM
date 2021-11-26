@@ -4,8 +4,8 @@ function doGet() {
 }
 
 //! Global Links for Master Sheets
-var rootSheetID = "1DeJwac2x9nToJDZq9G1fwa0DNIzZGIj5oe1Wrz3Rd68";
-var productSheetID = "1hk2wyK0fYitlmz3ag39NffusLU_VKEAzac-qBQeOYrI";
+var rootSheetID = "1DeJwac2x9nToJDZq9G1fwa0DNIzZGIj5oe1Wrz3Rd68"; //! MasterSheet Mapping
+var productSheetID = "1hk2wyK0fYitlmz3ag39NffusLU_VKEAzac-qBQeOYrI"; //! BU Name, Product Name, Region Name Mapping
 
 function RootFolderMapping() {
   //! For Root Folder Mapping
