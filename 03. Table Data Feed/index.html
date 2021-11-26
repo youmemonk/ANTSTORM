@@ -47,9 +47,9 @@
     <!-- Search bar and button -->
     <div id='searchBarBtn'></div>
 
-    <!-- Test filtered data -->
-    <div id=testFilteredData>
-
+    <!-- Create template btn -->
+    <div id=createTemplateBtn>
+        <button onclick="checked()">Create template</button>
     </div>
 
     <!-- <button id="view" onclick="dataPopulation()">View Console Log</button> -->
@@ -241,7 +241,6 @@
             dataFromRegionFilter = []
             // console.log(document.getElementById('region').value)
             var regionIndex = document.getElementById('region').value
-            // document.getElementById('testFilteredData').innerHTML = typeof(dataFromProductFilter)
             for (var i = 0; i < dataFromProductFilter.length; i++) {
                 if (dataFromProductFilter[i]['Region'].toUpperCase() == 'ALL' || dataFromProductFilter[i]['Region'] ==
                     regionIndex) {
@@ -253,7 +252,7 @@
             //Table should be populated at this step
             //Search bar and button appears
             document.getElementById('searchBarBtn').innerHTML =
-                '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()"> <button onclick="searchByText()">Search</button>'
+                '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()">'
             dataPopulation(dataFromRegionFilter);
         }
 
@@ -281,7 +280,10 @@
             return e;
         }
 
+        var dataInputToTable = [];
+
         function dataPopulation(e) {
+            dataInputToTable = e;
 
             // console.log(dataFromRegionFilter)
             var tableData = e;
@@ -291,44 +293,87 @@
             document.getElementById('table').innerHTML = header;
 
             var temp = [];
+            var i = 0;
             var image = "";
             if (tableData.length > 0) {
                 tableData.forEach((itemData) => {
                     // console.log(itemData)
                     temp += "<tr>";
-                    temp += "<td>p</td>";
-                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
+                    temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
+                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}" 
+                    // onchange="stickyheaddsadaer(this, ${i},${pp})"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
-                    temp += "<td>a</td>";
+                    // temp += "<td>a</td>";
+                    var checkDoc = /document/g
+                    var checkSheet = /spread/g
+                    var checkPpt = /presentation/g
+                    var checkForm = /form/g
 
-                    // if(itemData["Document Link"].indexOf("document") >= 0){
-                    //   image = "https://img.icons8.com/color/48/000000/google-docs--v1.png";
-                    // }
-                    // else if(itemData["Document Link"].indexOf("spreadsheets") >= 0){
-                    //   image = "https://img.icons8.com/color/48/000000/google-sheets.png";
-                    // }
-                    // else if(itemData["Document Link"].indexOf("presentation") >= 0){
-                    //   image = "https://img.icons8.com/color/48/000000/google-slides.png"
-                    // }
-                    // else{
-                    //   image = "https://img.icons8.com/external-kiranshastry-lineal-color-kiranshastry/64/000000/external-file-interface-kiranshastry-lineal-color-kiranshastry-4.png"
-                    // }
+                    if (checkDoc.test(itemData["Document Link"])) {
+                        image = "https://img.icons8.com/color/48/000000/google-docs--v1.png";
+                    } else if (checkSheet.test(itemData["Document Link"])) {
+                        image = "https://img.icons8.com/color/48/000000/google-sheets.png";
+                    } else if (checkPpt.test(itemData["Document Link"])) {
+                        image = "https://img.icons8.com/color/48/000000/google-slides.png"
+                    } else if (checkForm.test(itemData['Document Link'])) {
+                        image = "https://img.icons8.com/color/50/000000/google-forms-new-logo-1.png"
+                    }
+                    // Change this to error doc image
+                    else {
+                        image = "https://img.icons8.com/color/48/fa314a/google-drawing.png"
+                    }
 
                     // console.log(typeof(itemData["Document Link"]))
 
-                    // temp += "<td>" +
-                    //   `<a href=${itemData["Document Link"]}  target="_blank">
-                    //                     <img src=${image}
-                    //                     alt="Err" width="25" height="auto"></a>` +
-                    //   "</td>";
+                    temp += "<td>" +
+                        `<a href=${itemData["Document Link"]}  target="_blank">
+                                        <img src=${image}
+                                        alt="Err" width="30" height="auto"></a>` +
+                        "</td>";
                     temp += "<td>" + itemData["Document Description"] + "</td>";
                     temp += "<td>" + itemData["Product"] + "</td>";
-                    // i++;
+                    i++;
                 });
             } else {
                 var temp = errorfunction();
             }
             document.getElementById("tableBody").innerHTML = temp;
+        }
+
+        // Testing for onchange function for checkbox trigger
+        // var checkedListArray = []
+        // function stickyheaddsadaer(obj, rowData) {
+        //   if(obj.checked){
+        //     // alert("Yes checked"); //when checked
+        //     // var checkedRow = document.getElementById(`multiple-${id}`)
+        //     // checkedListArray.push()
+        //     // alert(Object.values(obj)[0])
+
+        //     console.log(rowData)
+
+        //     // ("#page-header-inner").addClass("sticky");
+        //   }else{
+        //     alert("Not checked"); //when not checked
+        //   }
+        // }
+
+        var checkList = [];
+
+        function checked() {
+            checkList = [];
+            // document.getElementById('multiple-0').value
+            for (var i = 0; i < dataInputToTable.length; i++) {
+                if (document.getElementById(`multiple-${i}`).checked) {
+                    // checkList.push(dataInputToTable[i]);
+                    // console.log(document.getElementById(`multiple-0`).checked);
+                    // console.log(dataInputToTable[i])
+                    checkList.push(dataInputToTable[i])
+                }
+                // checkList.push(document.getElementById(`multiple-${i}`).checked)
+            }
+            // console.log(document.getElementById(`multiple-0`).checked);
+            console.log(checkList);
+
         }
     </script>
 </body>
