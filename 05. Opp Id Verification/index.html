@@ -51,8 +51,31 @@
     <div id='searchBarBtn'></div>
 
     <!-- Create Template Button -->
-    <div id=createTemplateBtn>
-        <button onclick="createTemplate()">Create Template</button>
+    <!-- <div id=createTemplateBtn>
+      <button onclick="createTemplate()">Create Template</button>
+    </div> -->
+
+    <!-- Opp id verification modal -->
+    <!-- Button trigger modal -->
+    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create Template
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <input id="opportunityId" type='text' placeholder="Enter the opportunity ID">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="verifyOppId()">Create</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- <button id="view" onclick="dataPopulation()">View Console Log</button> -->
@@ -85,9 +108,8 @@
             buSheetData = dt[1];
             productSheetData = dt[2];
             regionSheetData = dt[3]
-            console.log(typeof (dt[4]))
             logoData = dt[4]
-
+            repoLogsData = dt[5]
 
             // console.log(productSheetData)
 
@@ -395,14 +417,38 @@
             console.log('Failed');
         }
 
-        function createTemplate() {
-            checked(); //! Function Call to get the CheckList
-            console.log("Starting...")
-            google.script.run
-                .withSuccessHandler(templateDummy)
-                .withFailureHandler(errorDummy)
-                .withUserObject(this)
-                .createTemplate(checkList);
+        // Verify Opportunity Id from fetched logs data sheet
+        function verifyOppId() {
+            var oppId = document.getElementById('opportunityId').value
+            // console.log(oppId)
+            var flag = false
+            var eneteredOppId
+            for (var i = 0; i < repoLogsData.length; i++) {
+                if (repoLogsData[i]['Opportunity ID'] == oppId) {
+                    // console.log(repoLogsData[i])
+                    eneteredOppId = repoLogsData[i]
+                    flag = true
+                    break;
+                }
+            }
+            if (flag) {
+                createTemplate(eneteredOppId)
+            } else {
+                alert('Opp id does not exists')
+            }
+        }
+
+        // Display popup for verification of Opp id
+        function createTemplate(id) {
+
+            // console.log(id)
+            // checked(); //! Function Call to get the CheckList
+            // console.log("Starting...")
+            //   google.script.run
+            //       .withSuccessHandler(templateDummy)
+            //       .withFailureHandler(errorDummy)
+            //       .withUserObject(this)
+            //       .createTemplate(checkList);
 
             // console.log(dataInputToTable);
             // console.log("Finished...")
