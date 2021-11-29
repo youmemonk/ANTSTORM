@@ -1,5 +1,6 @@
 //! ------------------------ CREATE TEMPLATE CODE -------------------------
 
+//Create template
 function createTemplate(idList) {
   // var idList = ["1KcsevShPpaoDTO3cCQsBtxs_Wv3UgZB6dtHMQaxesVY", "186-Y96GjjlQ4ClnIUnO3wnEDt7l8xEr2WNIuF0_iY5Y"];
   var targetFolderID = "10ap5wJPZ9nsR633bV7QUk_fO_dlAeWCg";
@@ -32,6 +33,19 @@ function createTemplate(idList) {
   return docUrl;
 }
 
+// Fetch Repo API logs sheet and converts to json
+function fetchAPILogs() {
+  var logsSheetID = "1k7Qmi-vqNzUpk0ukO6R3I2HC4xXiSjLv5nkPpLpTbRM";
+  var sheetName = "Repo API Logs";
+  var book = SpreadsheetApp.openById(logsSheetID);
+  var sheet = book.getSheetByName(sheetName);
+  var logsData = arrayToJSONObject(sheet.getDataRange().getValues());
+  Logger.log(logsData[0]);
+  // for(var i=0; i<logsData.length;i++){
+  //   Logger.log(logsData[i]['Opportunity ID'])
+  // }
+}
+
 //! ------------------------ DATA CODE -------------------------
 function doGet() {
   return HtmlService.createHtmlOutputFromFile("index");
@@ -41,12 +55,26 @@ function doGet() {
 var rootSheetID = "1DeJwac2x9nToJDZq9G1fwa0DNIzZGIj5oe1Wrz3Rd68";
 var productSheetID = "1hk2wyK0fYitlmz3ag39NffusLU_VKEAzac-qBQeOYrI";
 
-function RootFolderMapping() {
-  //! For Root Folder Mapping
+//Fetch data from rootMasterSheet and BU name, product name, region name frommapping sheet
+function rootFolderMapping() {
+  // //! For Root Folder Mapping
+  // var sheetName = "Sheet1";
+  // var book = SpreadsheetApp.openById(rootSheetID);
+  // var sheet = book.getSheetByName(sheetName);
+  // var rootdata = arrayToJSONObject(sheet.getDataRange().getValues());
+
+  //! For Root Folder Mapping with excluding empty values
   var sheetName = "Sheet1";
   var book = SpreadsheetApp.openById(rootSheetID);
   var sheet = book.getSheetByName(sheetName);
-  var rootdata = arrayToJSONObject(sheet.getDataRange().getValues());
+  var masterSheetData = sheet.getDataRange().getValues();
+  var cleanedMasterSheetData = [];
+  for (var i = 0; i < masterSheetData.length; i++) {
+    if (masterSheetData[i][1]) {
+      cleanedMasterSheetData.push(masterSheetData[i]);
+    }
+  }
+  var rootdata = arrayToJSONObject(cleanedMasterSheetData);
 
   //! For BU Name Mapping
   var busheetName = "Shared Drive Mapping";

@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <!-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-    <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet"> -->
-    <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+        rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 </head>
 
 <body>
@@ -52,9 +53,9 @@
     <!-- Search bar and button -->
     <div id='searchBarBtn'></div>
 
-    <!-- Test filtered data -->
-    <div id=testFilteredData>
-
+    <!-- Create Template Button -->
+    <div id=createTemplateBtn>
+        <button onclick="createTemplate()">Create Template</button>
     </div>
 
     <!-- <button id="view" onclick="dataPopulation()">View Console Log</button> -->
@@ -64,11 +65,6 @@
         <!-- All Data Comes Inside this -->
         <!-- </table> -->
     </div>
-
-    <!-- <div id="testing"></div> -->
-    <button onclick="createTemplate()">Create Template</button>
-    <!-- <button onclick="checked()">Check for Checked Array</button> -->
-
 
 
 
@@ -85,7 +81,7 @@
         var productNameMaping = {}
         // var commonArray = [];
         // var temp = [];
-        function dummyFunction(dt) {
+        function fetchMasterData(dt) {
             console.log('Data Fetch Running...');
             rootSheetData = dt[0];
             buSheetData = dt[1];
@@ -127,9 +123,9 @@
 
         //* Server Side Function Call
         google.script.run
-            .withSuccessHandler(dummyFunction)
+            .withSuccessHandler(fetchMasterData)
             .withUserObject(this)
-            .RootFolderMapping();
+            .rootFolderMapping();
 
         //* Get Selected Cycle Data from RootSheet
 
@@ -187,7 +183,7 @@
                 }
             }
             google.script.run
-                .withSuccessHandler(newdummyFunction)
+                .withSuccessHandler(fetchSelectedSheetData)
                 .withUserObject(this)
                 .fetchData(sheetIndex)
 
@@ -196,7 +192,7 @@
 
         var selectedSheetData;
 
-        function newdummyFunction(dt) {
+        function fetchSelectedSheetData(dt) {
             selectedSheetData = dt
             // Search available product codes in fetched sheet
             var availableProduct = []
@@ -259,7 +255,7 @@
             //Table should be populated at this step
             //Search bar and button appears
             document.getElementById('searchBarBtn').innerHTML =
-                '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()"> <button onclick="searchByText()">Search</button>'
+                '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()">'
             dataPopulation(dataFromRegionFilter);
         }
 
@@ -374,14 +370,10 @@
         // }
 
         function templateDummy(dt) {
-            // console.log('b');
-            // console.log(dt)
             console.log("Finished...")
         }
 
         function errorDummy() {
-            // var i= 5;
-            // console.log()
             console.log('Failed');
         }
 
