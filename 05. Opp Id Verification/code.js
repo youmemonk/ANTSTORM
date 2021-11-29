@@ -147,27 +147,7 @@ function createTemplate(bt) {
   // var idList =  bt[1]
   var targetFolderID = bt[0]["Folder ID"];
   // var targetFolderID = '1Phgfh1kP0TJH0niKoDewI6ruHvrOTqiX';
-
-  // //! For verifying Opp id/Project code
-  // var sheetName = "Repo API Logs";
-  // var repoBook = SpreadsheetApp.openById(logsSheet);
-  // var repoLogsSheet = repoBook.getSheetByName(sheetName);
-  // var repoLogsData = repoLogsSheet.getDataRange().getValues()
-  // var repologsJSONData = arrayToJSONObject(repoLogsData)
-
-  // var idList = ["1KcsevShPpaoDTO3cCQsBtxs_Wv3UgZB6dtHMQaxesVY", "186-Y96GjjlQ4ClnIUnO3wnEDt7l8xEr2WNIuF0_iY5Y"];
-  // var targetFolderID = "10ap5wJPZ9nsR633bV7QUk_fO_dlAeWCg";
-  // var fileID = "1Ov9Tu61XqyUZJcPKHzg5dyf3ZiDVuhreTuLOR0tqbFI";
-  // for(var i=0; i<idList.length; i++){
-
-  // function getIdFromUrl(url) { return url.match(/[-\w]{25,}/); }
-
-  // DriveApp.getFileById(idList[0]["Document Link"].match(/[-\w]{25,}/)).makeCopy(DriveApp.getFolderById(targetFolderID));
-  // }
-  // var pp = idList[0]["Document Link"].match(/[-\w]{25,}/);
   var docUrl = [];
-  // var docName;
-  // var docProduct = [];
   var fullname = "";
   var docName = "";
   var domainName = bt[0]["Domain Name"].split(".")[0];
@@ -175,6 +155,14 @@ function createTemplate(bt) {
 
   var newTemplateUrls = [];
   var driveStorageItems = [];
+
+  //! Getting the File Names & URLs present in the drive
+  var pp = DriveApp.getFolderById(target).getFiles();
+  var driveFileList = [];
+  while (pp.hasNext()) {
+    // var tempCycle = random.next();
+    driveFileList.push([pp.next(), pp.next().getUrl()]);
+  }
 
   for (var i = 0; i < idList.length; i++) {
     fullname = "";
@@ -185,6 +173,16 @@ function createTemplate(bt) {
     name =
       domainName.toUpperCase() + " | " + idList[i]["Product"] + " | " + docName;
 
+    // for(var i=0; i<driveFileList.length(); i++){
+    //   if(name == driveFileList[0][i]){
+    //     newTemplateUrls.push(driveFileList[1][i]);
+    //     // break;
+    //   }
+    //   else{
+    //   }
+    // }
+
+    // if(name == )
     // else{
     newTemplateUrls.push(
       DriveApp.getFileById(docUrl[i])
