@@ -72,7 +72,8 @@
                     <input id="opportunityId" type='text' placeholder="Enter the opportunity ID">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="verifyOppId()">Create</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onclick="verifyOppId()">Create</button>
                 </div>
             </div>
         </div>
@@ -91,6 +92,13 @@
 
 
     <script>
+        //* Server Side Function Call
+        google.script.run
+            .withSuccessHandler(fetchMasterData)
+            .withUserObject(this)
+            .rootFolderMapping();
+
+
         var rootSheetData;
         //! [Updated with Google Sheets now instead of Drive]
         //* Fetch data from Server Side
@@ -141,14 +149,10 @@
 
             // Populate cycle dropdown after fetching mapping data
             document.getElementById('cycleDropdown').innerHTML =
-                '<select name="Cycle" id="Cycle" onchange="selectCycle()"><option value="" disabled selected>Select a Business cycle</option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>'
+                '<select name="Cycle" id="Cycle" onchange="selectCycle()"><option value="" disabled selected>Select a Business cycle</  option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>'
         }
 
-        //* Server Side Function Call
-        google.script.run
-            .withSuccessHandler(fetchMasterData)
-            .withUserObject(this)
-            .rootFolderMapping();
+
 
         //* Get Selected Cycle Data from RootSheet
 
@@ -410,6 +414,7 @@
         // }
 
         function templateDummy(dt) {
+            console.log(dt)
             console.log("Finished...")
         }
 
@@ -417,12 +422,14 @@
             console.log('Failed');
         }
 
+
+        var eneteredOppId;
         // Verify Opportunity Id from fetched logs data sheet
         function verifyOppId() {
             var oppId = document.getElementById('opportunityId').value
             // console.log(oppId)
             var flag = false
-            var eneteredOppId
+            //  eneteredOppId
             for (var i = 0; i < repoLogsData.length; i++) {
                 if (repoLogsData[i]['Opportunity ID'] == oppId) {
                     // console.log(repoLogsData[i])
@@ -432,23 +439,24 @@
                 }
             }
             if (flag) {
-                createTemplate(eneteredOppId)
+                createTemplate()
             } else {
                 alert('Opp id does not exists')
             }
         }
 
+        var parameter = [];
         // Display popup for verification of Opp id
-        function createTemplate(id) {
-
-            // console.log(id)
-            // checked(); //! Function Call to get the CheckList
-            // console.log("Starting...")
-            //   google.script.run
-            //       .withSuccessHandler(templateDummy)
-            //       .withFailureHandler(errorDummy)
-            //       .withUserObject(this)
-            //       .createTemplate(checkList);
+        function createTemplate() {
+            console.log(eneteredOppId)
+            checked(); //! Function Call to get the CheckList
+            var parameter = [eneteredOppId, checkList]
+            console.log("Starting...")
+            google.script.run
+                .withSuccessHandler(templateDummy)
+                .withFailureHandler(errorDummy)
+                .withUserObject(this)
+                .createTemplate(parameter);
 
             // console.log(dataInputToTable);
             // console.log("Finished...")
