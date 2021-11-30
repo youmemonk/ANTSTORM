@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Assets and Templates</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -64,6 +64,7 @@
     </button>
 
     <!-- OPP ID/Project Code Modal -->
+    <!-- Add all elements to same body and add custom styling-->
     <div class="modal fade" id="OppIdModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -88,8 +89,10 @@
                 <div class="modal-header">
                     <button type="button" class="btn-close" aria-label="Close" onclick="closeSuccessModal()"></button>
                 </div>
-                <div class="modal-body text-center" id="successModalBody">
-                    <h1>--COntentT AA</h1>
+                <div class="modal-head" id="successModalHead">
+                </div>
+                <div class="modal-body" id="successModalBody">
+
                 </div>
                 <div class="modal-footer">
                     <!-- <button type="button" class="btn btn-primary">Create</button> -->
@@ -98,15 +101,20 @@
         </div>
     </div>
 
-    <!-- <button id="view" onclick="dataPopulation()">View Console Log</button> -->
-
+    <!-- Filtered data is populated in this table -->
     <div id="table">
-        <!-- <h1>This is a Table</h1> -->
-        <!-- <table id="tableData"> -->
-        <!-- All Data Comes Inside this -->
-        <!-- </table> -->
     </div>
 
+    <!-- Loading Spinner -->
+    <!-- <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only"></span>
+        </div>
+      </div>
+    </div>
+  </div> -->
 
 
 
@@ -114,29 +122,11 @@
 
 
     <script>
-        var checkList = [];
-
-        function openOppIdModal() {
-            checked();
-            if (checkList.length > 0) {
-                $('#OppIdModal').modal('show')
-                // console.log('pppp')
-            } else {
-                alert('Nothing SElected')
-            }
-
-        }
-
-        function closeOppIdModal() {
-            $('#OppIdModal').modal('hide')
-        }
-
-        function closeSuccessModal() {
-            $('#successModal').modal('hide')
-        }
-
+        // Loading screen to be added
+        // $('#loadingModal').modal('show')
 
         //* Server Side Function Call
+
         google.script.run
             .withSuccessHandler(fetchMasterData)
             .withUserObject(this)
@@ -155,6 +145,7 @@
         // var commonArray = [];
         // var temp = [];
         function fetchMasterData(dt) {
+
             console.log('Data Fetch Running...');
             rootSheetData = dt[0];
             buSheetData = dt[1];
@@ -204,6 +195,8 @@
         var buList = [];
 
         function selectCycle() {
+            // Empty the table
+            document.getElementById("table").innerHTML = "<div></div>"
             var cycleParameter = document.getElementById("Cycle").value;
             var commonarray = [];
             // if(cycleParameter == 'Delivery'){
@@ -245,6 +238,8 @@
         }
 
         function selectBU() {
+            // Empty the table
+            document.getElementById("table").innerHTML = "<div></div>"
             // console.log(document.getElementById('BU').value);
             var BUparam = document.getElementById('BU').value;
             var sheetIndex;
@@ -280,12 +275,14 @@
             }
 
             document.getElementById('productDropdown').innerHTML = `<select id="product" onchange="selectProduct()"> + "<option value="" disabled selected>Choose a Product
-      </option>" +  ${product.join()} + </select>`;
+    </option>" +  ${product.join()} + </select>`;
         }
 
         var dataFromProductFilter = []
 
         function selectProduct() {
+            // Empty the table
+            document.getElementById("table").innerHTML = "<div></div>"
             dataFromProductFilter = []
             // console.log(document.getElementById('product').value)
             for (var i = 0; i < selectedSheetData.length; i++) {
@@ -302,7 +299,7 @@
                     "</option>";
             }
             document.getElementById('regionDropdown').innerHTML = `<select id="region" onchange="selectRegion()"> + "<option value="" disabled selected>Choose a Region
-      </option>" +  ${region.join()} + </select>`;
+    </option>" +  ${region.join()} + </select>`;
 
             // console.log(dataFromProductFilter)
         }
@@ -310,6 +307,8 @@
         var dataFromRegionFilter = []
 
         function selectRegion() {
+            // Empty the table
+            document.getElementById("table").innerHTML = "<div></div>"
             // document.getElementById('table') = "<h1>random</h1>";
             dataFromRegionFilter = []
             // console.log(document.getElementById('region').value)
@@ -418,8 +417,8 @@
 
                     temp += "<td>" +
                         `<a href=${itemData["Document Link"]}  target="_blank">
-                                        <img src=${image}
-                                        alt="Err" width="30" height="auto"></a>` +
+                                      <img src=${image}
+                                      alt="Err" width="30" height="auto"></a>` +
                         "</td>";
                     //   `<a href=${itemData["Document Link"]}  target="_blank">
                     //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
@@ -457,31 +456,61 @@
         //   }
         // }
 
-        function templateDummy(dt) {
-            console.log(dt)
-            console.log("Finished...")
-            // document.getElementById('successModal').innerHTML = '<h1>--content--</h1>';
-            var temp = "";
-            for (var i = 0; i < checkList.length; i++) {
-                temp += `<a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br />`
-            }
+        // Open Opp id verification Modal
+        var checkList = [];
 
-            document.getElementById('successModalBody').innerHTML = `<p>${temp}</p>`;
+        function openOppIdModal() {
+            checked();
+            if (checkList.length > 0) {
+                $('#OppIdModal').modal('show')
+            } else {
+                alert('You have not selected anything')
+            }
+        }
+
+        // Close Opp id verification Modal
+        function closeOppIdModal() {
+            $('#OppIdModal').modal('hide')
+        }
+
+        // Close Success Modal
+        function closeSuccessModal() {
+            $('#successModal').modal('hide')
+        }
+
+        // Open success modal with created templates details
+        function templateDummy(dt) {
+            // console.log(dt)
+            var temp = "";
+            temp +=
+                `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId['Folder ID']}' target="_blank">repository.</a></p>`
+            temp += `<ul>`
+            for (var i = 0; i < checkList.length; i++) {
+                temp += `<li><a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br /></li>`
+            }
+            temp += `</ul>`
+            document.getElementById('successModalBody').innerHTML = `${temp}`;
             // console.log(checkList)
 
-
+            // Open Success Modal
             $('#successModal').modal('show')
+
+            console.log("Finished...")
         }
 
         function errorDummy() {
+
+            document.getElementById('successModalBody').innerHTML =
+                `<h2>Error</h2><br /><p>Your files have not been made</p>`;
+            $('#successModal').modal('show')
             console.log('Failed');
         }
 
-
+        // Verifies Opp id/Project code and sets domain name, folder id for chosen opp id
         var eneteredOppId;
         // Verify Opportunity Id from fetched logs data sheet
         function verifyOppId() {
-            //! Close Modal
+            //! Close Opp Id Modal
             $('#OppIdModal').modal('hide')
 
             var oppId = document.getElementById('opportunityId').value
@@ -497,9 +526,20 @@
                 }
             }
             if (flag) {
-                createTemplate()
+                if (eneteredOppId['Folder ID']) {
+                    createTemplate()
+                } else {
+                    // Add create teplates repo link in href
+                    // alert('Repo does not exists')
+                    document.getElementById('successModalBody').innerHTML =
+                        `<h2>Error</h2><br /><p>Repo does not exists. Goto this <a href='https://www.google.com' target='_blank'>link</a> to create</p>`;
+                    $('#successModal').modal('show')
+                }
             } else {
-                alert('Opp id does not exists')
+                // alert('Opp id does not exists')
+                document.getElementById('successModalBody').innerHTML =
+                    `<h2>Error</h2><br /><p>Opp id does not exists</p>`;
+                $('#successModal').modal('show')
             }
         }
 
@@ -526,19 +566,12 @@
 
         function checked() {
             checkList = [];
-            // document.getElementById('multiple-0').value
             for (var i = 0; i < dataInputToTable.length; i++) {
                 if (document.getElementById(`multiple-${i}`).checked) {
-                    // checkList.push(dataInputToTable[i]);
-                    // console.log(document.getElementById(`multiple-0`).checked);
-                    // console.log(dataInputToTable[i])
                     checkList.push(dataInputToTable[i])
                 }
-                // checkList.push(document.getElementById(`multiple-${i}`).checked)
             }
-            // console.log(document.getElementById(`multiple-0`).checked);
             console.log(checkList);
-
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
