@@ -138,13 +138,19 @@ function fetchData(id) {
 //Create template
 var idList = [];
 
+var index = 0;
+var flag = false;
+var newTemplateUrls = [];
+var name = "";
+
 function createTemplate(bt) {
   // for(var i=0)
   // a = [1,2]
   for (var i = 0; i < bt[1].length; i++) {
     idList.push(bt[1][i]);
   }
-  // var idList =  bt[1]
+
+  var idList = bt[1];
   var targetFolderID = bt[0]["Folder ID"];
   // var targetFolderID = '1Phgfh1kP0TJH0niKoDewI6ruHvrOTqiX';
   var docUrl = [];
@@ -153,36 +159,45 @@ function createTemplate(bt) {
   var domainName = bt[0]["Domain Name"].split(".")[0];
   // domainName.split('.')
 
-  var newTemplateUrls = [];
   var driveStorageItems = [];
+  var xy;
 
-  //! Getting the File Names & URLs present in the drive
-  var pp = DriveApp.getFolderById(target).getFiles();
+  // // //! Getting the File Names & URLs present in the drive
+  var pp = DriveApp.getFolderById(targetFolderID).getFiles();
   var driveFileList = [];
   while (pp.hasNext()) {
+      xy = pp.next()
     // var tempCycle = random.next();
-    driveFileList.push([pp.next(), pp.next().getUrl()]);
+    driveFileList.push([xy, xy.getUrl()]);
   }
 
   for (var i = 0; i < idList.length; i++) {
+    index = 0;
+    flag = false;
     fullname = "";
     docName = ""; //clear DocName
     docName = idList[i]["Document Name & Link"];
     docUrl.push(idList[i]["Document Link"].match(/[-\w]{25,}/));
     // docProduct.push(idList[i]["Product"]);
-    name =
-      domainName.toUpperCase() + " | " + idList[i]["Product"] + " | " + docName;
+    name = domainName.toUpperCase() + " | " + idList[i]["Product"] + " | " + docName;
 
-    // for(var i=0; i<driveFileList.length(); i++){
-    //   if(name == driveFileList[0][i]){
-    //     newTemplateUrls.push(driveFileList[1][i]);
-    //     // break;
-    //   }
-    //   else{
-    //   }
+    //! Search for existing files in drive, if any present
+    //! drivefilelist -> name and urls of currently exisiting doucments
+    for (var j = 0; j < driveFileList.length; j++) {
+      if (name == driveFileList[j][0]) {
+        index = j;
+        flag = true;
+        break;
+      }
+      // else{
+      //   index++;
+      // }
+    }
+
+    // if(flag == true){
+    //   //-> index se file url utha lo
+    //   newTemplateUrls.push(driveFileList[index][1])
     // }
-
-    // if(name == )
     // else{
     newTemplateUrls.push(
       DriveApp.getFileById(docUrl[i])
@@ -190,11 +205,12 @@ function createTemplate(bt) {
         .getUrl()
     );
     // }
-
-    // DriveApp.getFileById(docUrl[i]).makeCopy(name, DriveApp.getFolderById(targetFolderID));
   }
+
+  // DriveApp.getFileById(docUrl[i]).makeCopy(name, DriveApp.getFolderById(targetFolderID));
+  // }
   // Logger.log(idList);
-  return newTemplateUrls;
+  return driveFileList;
 }
 
 // // Fetch Repo API logs sheet and converts to json
