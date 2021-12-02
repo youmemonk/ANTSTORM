@@ -255,6 +255,7 @@ function createTemplate(bt) {
           docName;
 
         //! Reset Parameters
+        //! For checking if the file already exists
         flag = false;
         index = 0;
         for (var j = 0; j < driveFileList.length; j++) {
@@ -270,11 +271,71 @@ function createTemplate(bt) {
         if (flag == true) {
           newTemplateUrls.push(driveFileList[index][1]);
         } else {
-          newTemplateUrls.push(
-            DriveApp.getFileById(docUrl[i])
-              .makeCopy(name, DriveApp.getFolderById(targetFolderID))
-              .getUrl()
-          );
+          // var targetFileID = docUrl[i];
+
+          // //! --------------------------------------    For verifying file permission for the user
+          // var currUser = Session.getActiveUser().getEmail();
+          // const args = {
+          //   supportsAllDrives: true,
+          // };
+
+          // // Use advanced service to get the permissions list for the shared drive
+          // let fList = Drive.Permissions.list('1H3QU_EGYwm7e3PA4DHT2v6iBrURoRvNPbXZ2bgKWWzM', args); //! currently hardcoded
+          // //Put email and role in an array
+          // let editors = fList.items;
+          // // var arr = [];
+
+          // // var currUser = 'mayank.ukey@searce.com'
+          // // var currUser = 'bjkbkjbj'
+          // var filepermissionFlag = false;
+
+          // // for (var i = 0; i < editors.length; i++) {
+          // //   let email = editors[i].emailAddress;
+          // //   let role = editors[i].role;
+          // //   // let permissions = editors[i].permissionDetails;
+
+          //   if (email == currUser) {
+          //     if (role == "organizer") {
+          //       filepermissionFlag = true;
+          //       break;
+          //     } else if (role == "owner") {
+          //       filepermissionFlag = true;
+          //       break;
+          //     }
+          //     else if (role == "writer") {
+          //       filepermissionFlag = true;
+          //       break;
+          //     } else if (role == "fileOrganizer") {
+          //       filepermissionFlag = true;
+          //       break;
+          //     }
+          //     break;
+          //   }
+          // }
+
+          // if()
+
+          //! gives something went wrong, if no permission to make copy/file does not exist
+          // if (filepermissionFlag) {
+          try {
+            newTemplateUrls.push(
+              DriveApp.getFileById(docUrl[i])
+                .makeCopy(name, DriveApp.getFolderById(targetFolderID))
+                .getUrl()
+            );
+          } catch (e) {
+            // continue;
+            // } else {
+            errorSheet.appendRow([
+              new Date(),
+              Session.getActiveUser().getEmail(),
+              JSON.stringify(ex),
+            ]);
+            // continue;
+          }
+          // finally{
+          //   continue;
+          // }
         }
       }
       // Logger.log(idList);
