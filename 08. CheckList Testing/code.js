@@ -318,20 +318,25 @@ function createTemplate(bt) {
           //! gives something went wrong, if no permission to make copy/file does not exist
           // if (filepermissionFlag) {
           try {
-            newTemplateUrls.push(
-              DriveApp.getFileById(docUrl[i])
-                .makeCopy(name, DriveApp.getFolderById(targetFolderID))
-                .getUrl()
-            );
+            if(true){
+              newTemplateUrls.push(
+                DriveApp.getFileById(docUrl[i])
+                  .makeCopy(name, DriveApp.getFolderById(targetFolderID))
+                  .getUrl()  
+              );
+
+            }
+            throw "random"
           } catch (e) {
             // continue;
             // } else {
+            // continue
             errorSheet.appendRow([
               new Date(),
               Session.getActiveUser().getEmail(),
-              JSON.stringify(ex),
+              JSON.stringify('Inside Catch'),
             ]);
-            // continue;
+            continue;
           }
           // finally{
           //   continue;
@@ -349,7 +354,7 @@ function createTemplate(bt) {
     errorSheet.appendRow([
       new Date(),
       Session.getActiveUser().getEmail(),
-      JSON.stringify(e),
+      JSON.stringify('Outside Catch'),
     ]);
     return e;
   }
