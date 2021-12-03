@@ -437,39 +437,45 @@
 
     // Open success modal with created templates details
     function templateDummy(dt) {
+        console.log(dt)
+        // var templateUrl = dt[0]
+        // var templateFlag = dt[1]
         // console.log(Array.isArray(dt))
         $('#loadingModal').modal('hide');
         // add if else to check if dt has anything and trigger success modal or imposter modal
         // console.log(dt)
-        if (dt.length > 0 && Array.isArray(dt)) {
-            var temp = "";
-            temp +=
-                `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId['Folder ID']}' target="_blank">repository.</a></p>`
-            temp += `<ul>`
-            for (var i = 0; i < checkList.length; i++) {
+        // if (dt.length > 0) {
+        var temp = "";
+        temp +=
+            `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId['Folder ID']}' target="_blank">repository.</a></p>`
+        temp += `<ul>`
+        for (var i = 0; i < checkList.length; i++) {
+            if (dt[i][1]) {
                 temp += `<li><a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br /></li>`
+            } else {
+                console.log('partial files made')
             }
-            temp += `</ul>`
-            document.getElementById('successModalBody').innerHTML = `${temp}`;
-            // console.log(checkList)
-
-            // Open Success Modal
-            $('#successModal').modal('show')
-            console.log("Finished...")
-        } else if (dt.length == 0 && Array.isArray(dt)) {
-            document.getElementById('successModalBody').innerHTML = `No permission to drive`;
-            // console.log(checkList)
-
-            // Open Success Modal
-            $('#successModal').modal('show')
-
-            console.log("Failed")
-        } else {
-            somethingWentWrong()
         }
+        temp += `</ul>`
+        document.getElementById('successModalBody').innerHTML = `${temp}`;
+        // console.log(checkList)
+
+        // Open Success Modal
+        $('#successModal').modal('show')
+        console.log("Finished...")
+        // } else{
+        //     document.getElementById('successModalBody').innerHTML = `No permission to drive`;
+        //     // console.log(checkList)
+
+        //     // Open Success Modal
+        //     $('#successModal').modal('show')
+
+        //     console.log("Failed")} 
+
     }
 
     function errorDummy() {
+        // console.log(dt)
         $('#loadingModal').modal('hide');
 
         document.getElementById('successModalBody').innerHTML =

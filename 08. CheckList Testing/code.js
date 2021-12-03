@@ -176,73 +176,75 @@ var flag = false;
 var index = 0;
 
 function createTemplate(bt) {
-  try {
-    for (var i = 0; i < bt[1].length; i++) {
-      idList.push(bt[1][i]);
-    }
-    var targetFolderID = bt[0]["Folder ID"];
+  // try {
+  for (var i = 0; i < bt[1].length; i++) {
+    idList.push(bt[1][i]);
+  }
+  var targetFolderID = bt[0]["Folder ID"];
 
-    //! --------------------------------------    For verifying drive permission of user
-    var currUser = Session.getActiveUser().getEmail();
-    const args = {
-      supportsAllDrives: true,
-    };
+  //! --------------------------------------    For verifying drive permission of user
+  var currUser = Session.getActiveUser().getEmail();
+  const args = {
+    supportsAllDrives: true,
+  };
 
-    // Use advanced service to get the permissions list for the shared drive
-    let pList = Drive.Permissions.list(targetFolderID, args);
+  // Use advanced service to get the permissions list for the shared drive
+  let pList = Drive.Permissions.list(targetFolderID, args);
 
-    //Put email and role in an array
-    let editors = pList.items;
-    // var arr = [];
+  //Put email and role in an array
+  let editors = pList.items;
+  // var arr = [];
 
-    // var currUser = 'mayank.ukey@searce.com'
-    // var currUser = 'bjkbkjbj'
-    var permissionFlag = false;
+  // var currUser = 'mayank.ukey@searce.com'
+  // var currUser = 'bjkbkjbj'
+  var permissionFlag = false;
 
-    for (var i = 0; i < editors.length; i++) {
-      let email = editors[i].emailAddress;
-      let role = editors[i].role;
-      // let permissions = editors[i].permissionDetails;
+  for (var i = 0; i < editors.length; i++) {
+    let email = editors[i].emailAddress;
+    let role = editors[i].role;
+    // let permissions = editors[i].permissionDetails;
 
-      if (email == currUser) {
-        if (role == "organizer") {
-          permissionFlag = true;
-          break;
-        } else if (role == "writer") {
-          permissionFlag = true;
-          break;
-        } else if (role == "fileOrganizer") {
-          permissionFlag = true;
-          break;
-        }
+    if (email == currUser) {
+      if (role == "organizer") {
+        permissionFlag = true;
+        break;
+      } else if (role == "writer") {
+        permissionFlag = true;
+        break;
+      } else if (role == "fileOrganizer") {
+        permissionFlag = true;
         break;
       }
-
-      // arr.push([email, role]);
+      break;
     }
-    var newTemplateUrls = [];
-    if (permissionFlag) {
-      // Copy banani chahiye
-      // Logger.log('You have access')
-      //! --------------------------------------    For verifying Opp id/Project code
-      var docUrl = [];
-      var fullname = "";
-      var docName = "";
-      var domainName = bt[0]["Domain Name"].split(".")[0];
-      // domainName.split('.')
 
-      var driveStorageItems = [];
+    // arr.push([email, role]);
+  }
+  var newTemplateUrls = [];
+  var templateFlagAray = [];
+  if (permissionFlag) {
+    // Copy banani chahiye
+    // Logger.log('You have access')
+    //! --------------------------------------    For verifying Opp id/Project code
+    var docUrl = [];
+    var fullname = "";
+    var docName = "";
+    var domainName = bt[0]["Domain Name"].split(".")[0];
+    // domainName.split('.')
 
-      //! Get the Data from the Drive
-      var pp = DriveApp.getFolderById(targetFolderID).getFiles();
-      var driveFileList = [];
-      var tt;
-      while (pp.hasNext()) {
-        tt = pp.next();
-        driveFileList.push([tt.getName(), tt.getUrl()]);
-      }
+    var driveStorageItems = [];
 
-      for (var i = 0; i < idList.length; i++) {
+    //! Get the Data from the Drive
+    var pp = DriveApp.getFolderById(targetFolderID).getFiles();
+    var driveFileList = [];
+    var tt;
+    while (pp.hasNext()) {
+      tt = pp.next();
+      driveFileList.push([tt.getName(), tt.getUrl()]);
+    }
+
+    for (var i = 0; i < idList.length; i++) {
+      try {
         fullname = "";
         docName = ""; //* clear DocName
         docName = idList[i]["Document Name & Link"];
@@ -255,7 +257,6 @@ function createTemplate(bt) {
           docName;
 
         //! Reset Parameters
-        //! For checking if the file already exists
         flag = false;
         index = 0;
         for (var j = 0; j < driveFileList.length; j++) {
@@ -269,93 +270,49 @@ function createTemplate(bt) {
 
         //Create File w/ if/else
         if (flag == true) {
-          newTemplateUrls.push(driveFileList[index][1]);
+          newTemplateUrls.push([driveFileList[index][1], true]);
         } else {
-          // var targetFileID = docUrl[i];
-
-          // //! --------------------------------------    For verifying file permission for the user
-          // var currUser = Session.getActiveUser().getEmail();
-          // const args = {
-          //   supportsAllDrives: true,
-          // };
-
-          // // Use advanced service to get the permissions list for the shared drive
-          // let fList = Drive.Permissions.list('1H3QU_EGYwm7e3PA4DHT2v6iBrURoRvNPbXZ2bgKWWzM', args); //! currently hardcoded
-          // //Put email and role in an array
-          // let editors = fList.items;
-          // // var arr = [];
-
-          // // var currUser = 'mayank.ukey@searce.com'
-          // // var currUser = 'bjkbkjbj'
-          // var filepermissionFlag = false;
-
-          // // for (var i = 0; i < editors.length; i++) {
-          // //   let email = editors[i].emailAddress;
-          // //   let role = editors[i].role;
-          // //   // let permissions = editors[i].permissionDetails;
-
-          //   if (email == currUser) {
-          //     if (role == "organizer") {
-          //       filepermissionFlag = true;
-          //       break;
-          //     } else if (role == "owner") {
-          //       filepermissionFlag = true;
-          //       break;
-          //     }
-          //     else if (role == "writer") {
-          //       filepermissionFlag = true;
-          //       break;
-          //     } else if (role == "fileOrganizer") {
-          //       filepermissionFlag = true;
-          //       break;
-          //     }
-          //     break;
-          //   }
-          // }
-
-          // if()
-
-          //! gives something went wrong, if no permission to make copy/file does not exist
-          // if (filepermissionFlag) {
           // try {
-            // if(true){
-              newTemplateUrls.push(
-                DriveApp.getFileById(docUrl[i])
-                  .makeCopy(name, DriveApp.getFolderById(targetFolderID))
-                  .getUrl()  
-              );
-
-            // }
-            // throw "random"
+          newTemplateUrls.push([
+            DriveApp.getFileById(docUrl[i])
+              .makeCopy(name, DriveApp.getFolderById(targetFolderID))
+              .getUrl(),
+            true,
+          ]);
+          // templateFlagAray.push(true)
           // } catch (e) {
-          //   // continue;
-          //   // } else {
-          //   // continue
-          //   errorSheet.appendRow([
-          //     new Date(),
-          //     Session.getActiveUser().getEmail(),
-          //     JSON.stringify('Inside Catch'),
-          //   ]);
-          //   continue;
+          // 	errorSheet.appendRow([
+          // 		new Date(),
+          // 		Session.getActiveUser().getEmail(),
+          // 		JSON.stringify(e),
+          // 	]);
           // }
-          // finally{
-          //   continue;
-          // }
+          // {url1:true, url2:true , '': false}
         }
+      } catch (e) {
+        // templateFlagAray.push(false)
+        newTemplateUrls.push(["", false]);
+        errorSheet.appendRow([
+          new Date(),
+          Session.getActiveUser().getEmail(),
+          JSON.stringify(e),
+          "Failed",
+        ]);
       }
-      // Logger.log(idList);
-      return newTemplateUrls;
-    } else {
-      // Access denied wala modal
-      // Logger.log('You don\'t have access')
-      return newTemplateUrls;
     }
-  } catch (e) {
-    errorSheet.appendRow([
-      new Date(),
-      Session.getActiveUser().getEmail(),
-      JSON.stringify('Outside Catch'),
-    ]);
-    return e;
+    // Logger.log(idList);
+    return newTemplateUrls;
+  } else {
+    // Access denied wala modal
+    // Logger.log('You don\'t have access')
+    return newTemplateUrls;
   }
+  // } catch (e) {
+  // 	errorSheet.appendRow([
+  // 		new Date(),
+  // 		Session.getActiveUser().getEmail(),
+  // 		JSON.stringify(e),
+  // 	]);
+  // 	return e;
+  // }
 }
