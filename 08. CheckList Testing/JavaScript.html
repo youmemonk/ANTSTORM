@@ -249,7 +249,7 @@
             //Search bar and button appears
             document.getElementById('searchBarBtn').innerHTML =
                 '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()">'
-            dataPopulation(dataFromRegionFilter);
+            dataPopulation(dataFromRegionFilter, []);
         } catch (e) {
             console.log(e)
             somethingWentWrong()
@@ -272,7 +272,7 @@
             }
             // console.log(dataFromSearchFilter)
             // dataPopulation(instantCheckedListArray)
-            dataPopulation(dataFromSearchFilter);
+            dataPopulation(dataFromSearchFilter, instantCheckedListArray);
             // var newData = instantCheckedListArray.concat(dataFromSearchFilter)
             // dataPopulation(newData)
         } catch (e) {
@@ -287,11 +287,13 @@
     }
     var dataInputToTable = [];
 
-    function dataPopulation(e) {
+    function dataPopulation(e, e2) {
         try {
             // console.log(dataFromRegionFilter)
+
             dataInputToTable = e;
             var tableData = e;
+            var alreadyCheckedData = e2
             //! Push Header
             header =
                 "<table class='table table-bordered' id=\"tableData\"><thead> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = \"tableBody\" ><!-- Data comes here--></tbody></table>"
@@ -299,8 +301,9 @@
 
             var temp = [];
             var i = 0;
-            if (tableData.length > 0) {
-                tableData.forEach((itemData) => {
+            if (tableData.length > 0 || alreadyCheckedData.length > 0) {
+                alreadyCheckedData.concat(tableData).forEach((itemData) => {
+
                     var pp = itemData
                     temp += "<tr>";
                     // temp += "<td>p</td>";
@@ -308,12 +311,6 @@
                     temp += "<td>" + `<input type="checkbox" id="multiple-${i}" 
                     onchange="stickyheaddsadaer(this, ${i})"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
-                    // temp += "<td>a</td>";
-                    // temp += "<td>" +
-                    // var checkDoc = /document/g
-                    // var checkSheet = /spread/g
-                    // var checkPpt = /presentation/g
-                    // var checkForm = /form/g
 
                     var image = ""
                     image = logoData[0]['logo'];
@@ -325,40 +322,11 @@
                             break;
                         }
                     }
-
-                    // var re = new RegExp(logoData[0]['Document type'], 'g')
-                    // if(re.test(itemData["Document Link"])){
-                    //   image = logoData[0]['logo'];
-                    // }
-                    // else if(checkSheet.test(itemData["Document Link"])){
-                    //   image = "https://img.icons8.com/color/48/000000/google-sheets.png";
-                    // }
-                    // else if(checkPpt.test(itemData["Document Link"])){
-                    //   image = "https://img.icons8.com/color/48/000000/google-slides.png"
-                    // }
-                    // else if(checkForm.test(itemData['Document Link'])){
-                    //   image = "https://img.icons8.com/color/50/000000/google-forms-new-logo-1.png"
-                    // }
-                    // // Change this to error doc image
-                    // else{
-                    //   image = "https://img.icons8.com/color/48/fa314a/google-drawing.png"
-                    // }
-
-                    // console.log(typeof(itemData["Document Link"]))
-
                     temp += "<td>" +
                         `<a href=${itemData["Document Link"]}  target="_blank">
                                         <img src=${image}
                                         alt="Err" width="30" height="auto"></a>` +
                         "</td>";
-                    //   `<a href=${itemData["Document Link"]}  target="_blank">
-                    //                     <img src="https://1000logos.net/wp-content/uploads/2020/05/Google-Docs-logo.png" 
-                    //                     alt="Err" width="30" height="auto"></a>` +
-                    //   "</td>";
-                    // temp += "<td>" +
-                    //   `<a href=${itemData["Document Link"]}  target="_blank">
-                    //                     <img src="https://img.icons8.com/color/48/000000/google-docs--v1.png" width="30" height="auto"/></a>` +
-                    //   "</td>";
                     if (!itemData['Document Description']) {
                         itemData['Document Description'] = placeholderData[0]['Empty Description']
                     }
@@ -415,7 +383,7 @@
             } else {
                 // alert('You have not selected anything')
                 document.getElementById('successModalBody').innerHTML =
-                    `<h2>Error</h2><br /><p>You Have Not Selected Anything 😞</p>`;
+                    `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
                 $('#successModal').modal('show')
             }
         } catch (e) {
@@ -437,40 +405,50 @@
 
     // Open success modal with created templates details
     function templateDummy(dt) {
-        console.log(dt)
+        // console.log(dt)
         // var templateUrl = dt[0]
         // var templateFlag = dt[1]
         // console.log(Array.isArray(dt))
         $('#loadingModal').modal('hide');
+        var partialFiles = false;
         // add if else to check if dt has anything and trigger success modal or imposter modal
         // console.log(dt)
-        // if (dt.length > 0) {
-        var temp = "";
-        temp +=
-            `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId['Folder ID']}' target="_blank">repository.</a></p>`
-        temp += `<ul>`
-        for (var i = 0; i < checkList.length; i++) {
-            if (dt[i][1]) {
-                temp += `<li><a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br /></li>`
-            } else {
-                console.log('partial files made')
+        if (dt.length > 0) {
+            var temp = "";
+            var temp2 = ""
+            var notCreatedFiles = ""
+            temp +=
+                `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId['Folder ID']}' target="_blank">repository.</a></p>`
+            temp += `<ul>`
+            for (var i = 0; i < checkList.length; i++) {
+                if (dt[i][1]) {
+                    temp +=
+                        `<li><a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br /></li>`
+                } else {
+                    //  console.log('partial files made')
+                    partialFiles = true;
+                    notCreatedFiles += `<li>${checkList[i]['Document Name & Link']}</li>`
+                }
             }
+            temp += `</ul>`
+            if (partialFiles) {
+                temp2 += `<p>These files have not been created</p><ul>${notCreatedFiles}</ul>`
+            }
+            document.getElementById('successModalBody').innerHTML = `${temp+temp2}`;
+            // console.log(checkList)
+
+            // Open Success Modal
+            $('#successModal').modal('show')
+            console.log("Finished...")
+        } else {
+            document.getElementById('successModalBody').innerHTML = `No permission to drive`;
+            // console.log(checkList)
+
+            // Open Success Modal
+            $('#successModal').modal('show')
+
+            console.log("Failed")
         }
-        temp += `</ul>`
-        document.getElementById('successModalBody').innerHTML = `${temp}`;
-        // console.log(checkList)
-
-        // Open Success Modal
-        $('#successModal').modal('show')
-        console.log("Finished...")
-        // } else{
-        //     document.getElementById('successModalBody').innerHTML = `No permission to drive`;
-        //     // console.log(checkList)
-
-        //     // Open Success Modal
-        //     $('#successModal').modal('show')
-
-        //     console.log("Failed")} 
 
     }
 
@@ -560,7 +538,7 @@
         } catch (e) {
             // alert('You have not selected anything')
             document.getElementById('successModalBody').innerHTML =
-                `<h2>Error</h2><br /><p>You Have Not Selected Anything 😞</p>`;
+                `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
             $('#successModal').modal('show')
         }
     }

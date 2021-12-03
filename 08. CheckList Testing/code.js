@@ -287,7 +287,6 @@ function createTemplate(bt) {
           // 		JSON.stringify(e),
           // 	]);
           // }
-          // {url1:true, url2:true , '': false}
         }
       } catch (e) {
         // templateFlagAray.push(false)
@@ -296,7 +295,7 @@ function createTemplate(bt) {
           new Date(),
           Session.getActiveUser().getEmail(),
           JSON.stringify(e),
-          "Failed",
+          `Error with file id: ${docUrl[i]}`,
         ]);
       }
     }
