@@ -301,8 +301,45 @@
 
             var temp = [];
             var i = 0;
+            var newData = []
+            // newData = alreadyCheckedData.filter(item => item !== tableData)
+            // newData = alreadyCheckedData.filter(value => tableData.includes(value));
+            newData = tableData.filter(x => !alreadyCheckedData.includes(x));
+            // console.log(newData)
             if (tableData.length > 0 || alreadyCheckedData.length > 0) {
-                alreadyCheckedData.concat(tableData).forEach((itemData) => {
+                alreadyCheckedData.forEach((itemData) => {
+
+                    var pp = itemData
+                    temp += "<tr>";
+                    // temp += "<td>p</td>";
+                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
+                    temp += "<td>" + `<input type="checkbox" checked='true' id="multiple-${i}" 
+                    onchange="stickyheaddsadaer(this, ${i})"/>` + "</td>";
+                    temp += "<td>" + itemData["Document Name & Link"] + "</td>";
+
+                    var image = ""
+                    image = logoData[0]['logo'];
+                    //Loop through document logo sheet data
+                    for (var j = 1; j < logoData.length; j++) {
+                        var re = new RegExp(logoData[j]['Document type'], 'g')
+                        if (re.test(itemData["Document Link"])) {
+                            image = logoData[j]['logo'];
+                            break;
+                        }
+                    }
+                    temp += "<td>" +
+                        `<a href=${itemData["Document Link"]}  target="_blank">
+                                        <img src=${image}
+                                        alt="Err" width="30" height="auto"></a>` +
+                        "</td>";
+                    if (!itemData['Document Description']) {
+                        itemData['Document Description'] = placeholderData[0]['Empty Description']
+                    }
+                    temp += "<td>" + itemData["Document Description"] + "</td>";
+                    temp += "<td>" + itemData["Product"] + "</td>";
+                    i++;
+                });
+                newData.forEach((itemData) => {
 
                     var pp = itemData
                     temp += "<tr>";
