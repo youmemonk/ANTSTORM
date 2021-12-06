@@ -247,9 +247,9 @@
 
             //Table should be populated at this step
             //Search bar and button appears
-            document.getElementById('searchBarBtn').innerHTML =
+            document.getElementById('searchBar').innerHTML =
                 '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()">'
-            dataPopulation(dataFromRegionFilter, []);
+            dataPopulation(dataFromRegionFilter);
         } catch (e) {
             console.log(e)
             somethingWentWrong()
@@ -272,7 +272,7 @@
             }
             // console.log(dataFromSearchFilter)
             // dataPopulation(instantCheckedListArray)
-            dataPopulation(dataFromSearchFilter, instantCheckedListArray);
+            dataPopulation(dataFromSearchFilter);
             // var newData = instantCheckedListArray.concat(dataFromSearchFilter)
             // dataPopulation(newData)
         } catch (e) {
@@ -287,13 +287,13 @@
     }
     var dataInputToTable = [];
 
-    function dataPopulation(e, e2) {
+    function dataPopulation(e) {
         try {
             // console.log(dataFromRegionFilter)
 
             dataInputToTable = e;
             var tableData = e;
-            var alreadyCheckedData = e2
+            // var alreadyCheckedData = e2
             //! Push Header
             header =
                 "<table class='table table-bordered' id=\"tableData\"><thead> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = \"tableBody\" ><!-- Data comes here--></tbody></table>"
@@ -301,15 +301,15 @@
 
             var temp = [];
             var i = 0;
-            if (tableData.length > 0 || alreadyCheckedData.length > 0) {
-                alreadyCheckedData.concat(tableData).forEach((itemData) => {
-
-                    var pp = itemData
+            if (tableData.length > 0) {
+                tableData.forEach((itemData) => {
+                    // var pp = itemData
                     temp += "<tr>";
                     // temp += "<td>p</td>";
-                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
-                    temp += "<td>" + `<input type="checkbox" id="multiple-${i}" 
-                    onchange="stickyheaddsadaer(this, ${i})"/>` + "</td>";
+                    temp += "<td>" + `<input type="checkbox" id="multiple-${i}"/>` + "</td>";
+
+                    // temp += "<td>" + `<input type="checkbox" id="multiple-${i}" 
+                    // onchange="stickyheaddsadaer(this, ${i})"/>` + "</td>";
                     temp += "<td>" + itemData["Document Name & Link"] + "</td>";
 
                     var image = ""
@@ -348,29 +348,29 @@
     // Testing for onchange function for checkbox trigger
     var instantCheckedListArray = []
 
-    function stickyheaddsadaer(obj, rowId) {
-        if (obj.checked) {
-            // alert("Yes checked"); //when checked
-            var checkedRow = document.getElementById(`multiple-${rowId}`)
-            // instantCheckedListArray.push()
-            // alert(Object.values(obj)[0])
-            // console.log(checkedRow)
-            instantCheckedListArray.push(dataInputToTable[rowId])
-            console.log(instantCheckedListArray)
+    // function stickyheaddsadaer(obj, rowId) {
+    //     if (obj.checked) {
+    //         // alert("Yes checked"); //when checked
+    //         var checkedRow = document.getElementById(`multiple-${rowId}`)
+    //         // instantCheckedListArray.push()
+    //         // alert(Object.values(obj)[0])
+    //         // console.log(checkedRow)
+    //         instantCheckedListArray.push(dataInputToTable[rowId])
+    //         console.log(instantCheckedListArray)
 
-            // ("#page-header-inner").addClass("sticky");
-        } else {
-            // alert("Not checked"); //when not checked
-            // console.log(instantCheckedListArray)
-            instantCheckedListArray = instantCheckedListArray.filter(item => item !== dataInputToTable[rowId])
-            console.log(instantCheckedListArray)
-            // for(var i=0; i<instantCheckedListArray.length; i++){
-            //   if(instantCheckedListArray[i]==dataInputToTable[rowId]){
+    //         // ("#page-header-inner").addClass("sticky");
+    //     } else {
+    //         // alert("Not checked"); //when not checked
+    //         // console.log(instantCheckedListArray)
+    //         instantCheckedListArray = instantCheckedListArray.filter(item => item !== dataInputToTable[rowId])
+    //         console.log(instantCheckedListArray)
+    //         // for(var i=0; i<instantCheckedListArray.length; i++){
+    //         //   if(instantCheckedListArray[i]==dataInputToTable[rowId]){
 
-            //   }
-            // }
-        }
-    }
+    //         //   }
+    //         // }
+    //     }
+    // }
 
     // Open Opp id verification Modal
     var checkList = [];
@@ -423,7 +423,7 @@
             for (var i = 0; i < checkList.length; i++) {
                 if (dt[i][1]) {
                     temp +=
-                        iuy `<li><a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br /></li>`
+                        `<li><a href=${dt[i]} target="_blank">${checkList[i]['Document Name & Link']}</a><br /></li>`
                 } else {
                     //  console.log('partial files made')
                     partialFiles = true;
