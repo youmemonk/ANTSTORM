@@ -15,73 +15,43 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row text-center m-5">
-            <h1>Assets and Templates Library</h1>
-        </div>
-        <div class="row m-1 text-center">
 
-            <div class="col-3 text-center">
-                <!-- Cycle Dropdown -->
-                <div id="cycleDropdown">
-                    <select>
-                        <option value="" disabled selected>Select a Business cycle
-                        </option>
-                    </select>
-                </div>
-            </div>
+    <h1>Assets and Templates</h1>
 
-            <div class="col-3">
-                <!-- BU Dropdown -->
-                <div id="BUDropdown">
-                    <select>
-                        <option value="" disabled selected>Select Business Unit (BU)
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div id='productDropdown'>
-                    <!-- Product Dropdown -->
-                    <select name="product" id="product">
-                        <option value="" disabled selected>Select the Product
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-3">
-                <div id='regionDropdown'>
-                    <!-- Region Dropdown -->
-                    <select name="region" id="region">
-                        <option value="" disabled selected>Select the Region
-                        </option>
-                    </select>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row m-4">
-
-            <div class="col-3">
-                <button type="button" onclick="openOppIdModal()">
-                    Create Template
-                </button>
-
-                <span class="tooltip1" id="createTemplateInfo">
-                    <i class="uil uil-comment-exclamation"></i>
-                    <!-- placeholder -->
-                </span>
-            </div>
-
-        </div>         
+    <!-- Cycle dropdown -->
+    <div id="cycleDropdown">
+        <select>
+            <option value="" disabled selected>Select a Business cycle
+            </option>
+        </select>
     </div>
 
+    <!-- BU dropdown -->
+    <div id="BUDropdown">
+        <select>
+            <option value="" disabled selected>Select Business Unit (BU)
+            </option>
+        </select>
+    </div>
+
+    <!-- Product dropdown -->
+    <div id='productDropdown'>
+        <select name="product" id="product">
+            <option value="" disabled selected>Select the Product
+            </option>
+        </select>
+    </div>
+
+    <!-- Region dropdown -->
+    <div id='regionDropdown'>
+        <select name="region" id="region">
+            <option value="" disabled selected>Select the Region
+            </option>
+        </select>
+    </div>
+
+    <!-- Search bar and button -->
     <div id='searchBarBtn'></div>
-
-
 
     <!-- Create Template Button -->
     <!-- <div id=createTemplateBtn>
@@ -90,10 +60,15 @@
 
     <!-- Opp id verification modal -->
     <!-- Button trigger modal -->
+    <button type="button" onclick="openOppIdModal()">
+        Create Template
+    </button>
 
 
-
-
+    <div class="tooltip1" id="createTemplateInfo">
+        <i class="uil uil-comment-exclamation"></i>
+        <!-- placeholder -->
+    </div>
 
     <!-- Info block beside create template button -->
     <!-- <div class="tooltip1">💁🏻‍♂️?
