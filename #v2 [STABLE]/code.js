@@ -13,7 +13,9 @@
 
 //! Call to Client Side
 function doGet(request) {
-  return HtmlService.createTemplateFromFile("index").evaluate();
+  return HtmlService.createTemplateFromFile("index")
+    .evaluate()
+    .setTitle("Assets & Templates Library");
 }
 
 //! Includes JavaScript and Style Sheet to Index
