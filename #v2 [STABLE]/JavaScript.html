@@ -83,7 +83,6 @@
   }
 
   //* Get Selected Cycle Data from RootSheet
-
   function selectCycle() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
@@ -141,6 +140,7 @@
     }
   }
 
+  //* Get Business Units from selected Cycle
   function selectBU() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
@@ -165,6 +165,7 @@
     }
   }
 
+  //! Gets all the Data from the MasterSheet after selection of BU
   function fetchSelectedSheetData(sheetDataParam) {
     if (sheetDataParam.length > 0) {
       selectedSheetData = sheetDataParam;
@@ -197,6 +198,7 @@
     }
   }
 
+  //* Get Products from selected Business Unit
   function selectProduct() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
@@ -231,6 +233,7 @@
     }
   }
 
+  //* Get Regions from selected Product
   function selectRegion() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
@@ -242,6 +245,7 @@
       var regionIndex = document.getElementById("region").value;
       for (var i = 0; i < dataFromProductFilter.length; i++) {
         if (
+          //! Both for: specific mentioned Region or avail for ALL
           dataFromProductFilter[i]["Region"].toUpperCase() == "ALL" ||
           dataFromProductFilter[i]["Region"] == regionIndex
         ) {
@@ -262,6 +266,7 @@
     }
   }
 
+  //! Searches by Text inside Loaded Table
   function searchByText() {
     try {
       //! Empty the Array
@@ -285,12 +290,7 @@
     }
   }
 
-  //! If SearchText is not found in table
-  function errorfunction() {
-    var e = "No Records Found";
-    return e;
-  }
-
+  //! Populates the Table through temp & innerHTML
   function dataPopulation(e) {
     try {
       var tableData = e;
@@ -353,11 +353,18 @@
         //! For No Data from MasterSheet
         var temp = errorfunction();
       }
+      //! Sending to Table Body
       document.getElementById("tableBody").innerHTML = temp;
     } catch (e) {
       //! Triggers incase Error From Backend
       somethingWentWrong();
     }
+  }
+
+  //! If SearchText is not found in table
+  function errorfunction() {
+    var e = "No Records Found";
+    return e;
   }
 
   // Checkbox trigger onchange function
@@ -391,6 +398,24 @@
     }
   }
 
+  //! Open Opp id verification Modal
+  function openOppIdModal() {
+    try {
+      getCheckedValues();
+      if (newCheckedList.length > 0) {
+        $("#OppIdModal").modal("show");
+      } else {
+        document.getElementById(
+          "successModalBody"
+        ).innerHTML = `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
+        $("#successModal").modal("show");
+      }
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
   //! Get Checked Values from datafromRegionFilter
   function getCheckedValues() {
     //* Empty the Array
@@ -412,16 +437,43 @@
     }
   }
 
-  //! Open Opp id verification Modal
-  function openOppIdModal() {
+  //! Verifies Opp id/Project code and sets domain name, folder ID for chosen Opp ID
+  function verifyOppId() {
     try {
-      getCheckedValues();
-      if (newCheckedList.length > 0) {
-        $("#OppIdModal").modal("show");
+      //! Close Opp Id Modal
+      $("#OppIdModal").modal("hide");
+
+      //! Prerequisite parameters
+      var oppId = document.getElementById("opportunityId").value;
+      var flag = false;
+      //! Flag Turns true after matching Correct Opportunity ID / Project Code
+
+      for (var i = 0; i < repoLogsData.length; i++) {
+        if (repoLogsData[i]["Opportunity ID"] == oppId) {
+          eneteredOppId = repoLogsData[i];
+          flag = true;
+          break; // match found -> break out of loop.
+        }
+      }
+      if (flag) {
+        //is true
+        if (eneteredOppId["Folder ID"]) {
+          //function call to create template/
+          createTemplate();
+        } else {
+          //* Correct Opp ID, but empty Folder ID
+          //* Redirect to Create Repo Link
+          document.getElementById(
+              "successModalBody"
+            ).innerHTML =
+            `<h2>Error</h2><br /><p>Repo does not exists. Goto this <a href='${placeholderData[0]["Create Repo Link"]}' target='_blank'>link</a> to create</p>`;
+          $("#successModal").modal("show");
+        }
       } else {
+        //* Invalid Project Code / opportunity ID
         document.getElementById(
           "successModalBody"
-        ).innerHTML = `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
+        ).innerHTML = `<h2>Error</h2><br /><p>Opportunity ID / Project code does not exists</p>`;
         $("#successModal").modal("show");
       }
     } catch (e) {
@@ -481,6 +533,7 @@
     }
   }
 
+  //! Server Side Error in File Making -> Modal
   function errorTemplateURLs() {
     //! Hide Loading Screen Modal
     $("#loadingModal").modal("hide");
@@ -490,51 +543,6 @@
     ).innerHTML = `<h2>Error</h2><br /><p>Your files have not been made</p>`;
     $("#successModal").modal("show");
     console.log("Failed");
-  }
-
-  //! Verifies Opp id/Project code and sets domain name, folder ID for chosen Opp ID
-  function verifyOppId() {
-    try {
-      //! Close Opp Id Modal
-      $("#OppIdModal").modal("hide");
-
-      //! Prerequisite parameters
-      var oppId = document.getElementById("opportunityId").value;
-      var flag = false;
-      //! Flag Turns true after matching Correct Opportunity ID / Project Code
-
-      for (var i = 0; i < repoLogsData.length; i++) {
-        if (repoLogsData[i]["Opportunity ID"] == oppId) {
-          eneteredOppId = repoLogsData[i];
-          flag = true;
-          break; // match found -> break out of loop.
-        }
-      }
-      if (flag) {
-        //is true
-        if (eneteredOppId["Folder ID"]) {
-          //function call to create template/
-          createTemplate();
-        } else {
-          //* Correct Opp ID, but empty Folder ID
-          //* Redirect to Create Repo Link
-          document.getElementById(
-              "successModalBody"
-            ).innerHTML =
-            `<h2>Error</h2><br /><p>Repo does not exists. Goto this <a href='${placeholderData[0]["Create Repo Link"]}' target='_blank'>link</a> to create</p>`;
-          $("#successModal").modal("show");
-        }
-      } else {
-        //* Invalid Project Code / opportunity ID
-        document.getElementById(
-          "successModalBody"
-        ).innerHTML = `<h2>Error</h2><br /><p>Opportunity ID / Project code does not exists</p>`;
-        $("#successModal").modal("show");
-      }
-    } catch (e) {
-      //! Triggers incase Error From Backend
-      somethingWentWrong();
-    }
   }
 
   //! Create Template Function
