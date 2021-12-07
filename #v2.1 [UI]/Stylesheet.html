@@ -1,0 +1,96 @@
+<style>
+    /* IMPORTS */
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+    body {
+        background: #f7f9fb;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #F1FAEE, #A8DADC);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #F1FAEE, #A8DADC);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    /* Tooltip for info button popup */
+    #title {
+        background-color: #8EC5FC;
+        background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    }
+
+    h1 {
+        font-size: 70px;
+        font-weight: bold;
+        color: rgb(22, 20, 20);
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+    #dropdownRow {
+        margin-top: 25px;
+    }
+
+    .dropdown {
+        margin-right: 5px;
+        border-radius: 5px;
+        align-content: center;
+        text-align: center;
+        width: 210px;
+        height: 40px;
+    }
+
+    .dropdownOptions {
+        border-radius: 20px;
+        background-color: hotpink;
+        width: 220px;
+        height: auto;
+    }
+
+    .btn-grad {
+        background-image: linear-gradient(to right, #D31027 0%, #EA384D 51%, #D31027 100%)
+    }
+
+    .btn-grad {
+        margin: 8px;
+        padding: 7px 25px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 0 0 20px lightgray;
+        border-radius: 10px;
+        /* display: block; */
+    }
+
+    .btn-grad:hover {
+        background-position: right center;
+        /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+    }
+
+    /* select */
+    .tooltip1 {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip1 .tooltiptext1 {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        top: -5px;
+        left: 105%;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+    }
+
+    .tooltip1:hover .tooltiptext1 {
+        visibility: visible;
+    }
+</style>
