@@ -297,7 +297,7 @@
       dataInputToTable = e;
       //! Push tableHeader
       var tableHeader =
-        '<table class=\'table table-bordered\' id="tableData"><thead> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = "tableBody" ><!-- Data comes here--></tbody></table>';
+        '<table class=\'table table-bordered\' id="tableData"><thead id="tableHead"> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = "tableBody" ><!-- Data comes here--></tbody></table>';
       document.getElementById("table").innerHTML = tableHeader;
 
       //! Parameters for table Population
@@ -310,14 +310,14 @@
           //! Check for Already checked Rows
           if (itemData["checked"]) {
             temp +=
-              "<td>" +
-              `<input type="checkbox" checked='true' id=${itemData["Document Link"]} 
+              `<td class="tableElementCenter">` +
+              `<input class="checkbox" type="checkbox" checked='true' id=${itemData["Document Link"]} 
                       onchange="stickyCheckbox(this, ${i})"/>` +
               "</td>";
           } else {
             temp +=
-              "<td>" +
-              `<input type="checkbox" id=${itemData["Document Link"]} 
+              `<td class="tableElementCenter">` +
+              `<input class="checkbox" type="checkbox" id=${itemData["Document Link"]} 
                       onchange="stickyCheckbox(this, ${i})"/>` +
               "</td>";
           }
@@ -334,10 +334,10 @@
             }
           }
           temp +=
-            "<td>" +
+            `<td class="tableElementCenter">` +
             `<a href=${itemData["Document Link"]}  target="_blank">
                                           <img src=${image}
-                                          alt="Err" width="30" height="auto"></a>` +
+                                          alt="Err" width="45" height="auto"></a>` +
             "</td>";
 
           //! For Empty Document Description, add From here.
@@ -346,7 +346,7 @@
               placeholderData[0]["Empty Description"];
           }
           temp += "<td>" + itemData["Document Description"] + "</td>";
-          temp += "<td>" + itemData["Product"] + "</td>";
+          temp += `<td class="tableElementCenter">` + itemData["Product"] + "</td>";
           i++;
         });
       } else {
@@ -514,9 +514,8 @@
       if (partialFiles) {
         notCreatedFiles += `<p>These files have not been created</p><ul>${notCreatedFilesList}</ul>`;
       }
-      document.getElementById("successModalBody").innerHTML = `${
-      createdFiles + notCreatedFiles
-    }`;
+      document.getElementById("successModalBody").innerHTML = `${createdFiles + notCreatedFiles
+              }`;
 
       //! Open Success Modal
       $("#successModal").modal("show");
