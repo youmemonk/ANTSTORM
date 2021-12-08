@@ -16,7 +16,7 @@
 
 <body>
     <div class="container-fluid">
-        <div class="row text-center p-4" id="title">
+        <div class="row text-center" id="title">
             <h1>ASSETS & TEMPLATES LIBRARY</h1>
         </div>
 
@@ -26,7 +26,7 @@
                 <!-- Cycle Dropdown -->
                 <div id="cycleDropdown">
                     <select class="dropdown">
-                        <option value="" disabled selected>Select a Business cycle
+                        <option class="dropdownOption" value="" disabled selected>Select a Business cycle
                         </option>
                     </select>
                 </div>
@@ -66,19 +66,18 @@
             </div>
         </div>
 
+        <!-- Create template row -->
         <div class="row text-center justify-content-between" id="createTemplateBtnRow">
+            <div class="col-3 align-self-end">
+                <div id='searchBar'></div>
+            </div>
             <div class="col-3">
-                <button type="button" onclick="openOppIdModal()" class="btn-grad">
-                    Create Template
-                </button>
-
                 <span class="tooltip1" id="createTemplateInfo">
                     <i class="uil uil-comment-exclamation"></i>
                 </span>
-            </div>
-
-            <div class="col-3 align-self-end">
-                <div id='searchBar'></div>
+                <button type="button" onclick="openOppIdModal()" class="btn-grad">
+                    Create Template
+                </button>
             </div>
         </div>
 
@@ -91,28 +90,27 @@
                         <button type="button" class="btn-close" onclick="closeOppIdModal()" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-center" id="oppIdInput">
-
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="verifyOppId()">Create</button>
+                        <button type="button" class="btnCreate" onclick="verifyOppId()">Create</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Success Modal  -->
-        <div class="modal fade" id="successModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="random"
+        <!-- notification Modal  -->
+        <div class="modal fade" id="notificationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="random"
             aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="btn-close" aria-label="Close"
-                            onclick="closeSuccessModal()"></button>
+                            onclick="closeNotificationModal()"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="successModalHead">
+                        <div id="notificationModalHead">
                         </div>
-                        <div id="successModalBody">
+                        <div id="notificationModalBody">
                         </div>
                     </div>
                     <!-- <div class="modal-footer">

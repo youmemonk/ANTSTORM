@@ -45,7 +45,7 @@
       document.getElementById(
         "createTemplateInfo"
       ).innerHTML = `<i class="uil uil-comment-exclamation"></i>
-      <span class="tooltiptext1">${placeholderData[0]["Create Template Info"]}</span>`;
+        <span class="tooltiptext1">${placeholderData[0]["Create Template Info"]}</span>`;
 
       //! Onload Creates two arrays, on user Input
       //* Get Delivery Array
@@ -191,7 +191,7 @@
       document.getElementById(
         "productDropdown"
       ).innerHTML = `<select id="product" onchange="selectProduct()"  class="dropdown"> + "<option value="" disabled selected>Choose a Product
-          </option>" +  ${productOptionsList.join()} + </select>`;
+            </option>" +  ${productOptionsList.join()} + </select>`;
     } else {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -225,8 +225,8 @@
       }
       document.getElementById(
         "regionDropdown"
-      ).innerHTML = `<select id="region" onchange="selectRegion()"  class="dropdown"> + "<option value="" disabled selected>Choose a Region
-          </option>" +  ${regionOptionsList.join()} + </select>`;
+      ).innerHTML = `<select id="region" onchange="selectRegion()" class="dropdown"> + "<option value="" disabled selected>Choose a Region
+            </option>" +  ${regionOptionsList.join()} + </select>`;
     } catch (e) {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -312,13 +312,13 @@
             temp +=
               `<td class="tableElementCenter">` +
               `<input class="checkbox" type="checkbox" checked='true' id=${itemData["Document Link"]} 
-                      onchange="stickyCheckbox(this, ${i})"/>` +
+                        onchange="stickyCheckbox(this, ${i})"/>` +
               "</td>";
           } else {
             temp +=
               `<td class="tableElementCenter">` +
               `<input class="checkbox" type="checkbox" id=${itemData["Document Link"]} 
-                      onchange="stickyCheckbox(this, ${i})"/>` +
+                        onchange="stickyCheckbox(this, ${i})"/>` +
               "</td>";
           }
           temp += "<td>" + itemData["Document Name & Link"] + "</td>";
@@ -336,8 +336,8 @@
           temp +=
             `<td class="tableElementCenter">` +
             `<a href=${itemData["Document Link"]}  target="_blank">
-                                          <img src=${image}
-                                          alt="Err" width="45" height="auto"></a>` +
+                                            <img src=${image}
+                                            alt="Err" width="45" height="auto"></a>` +
             "</td>";
 
           //! For Empty Document Description, add From here.
@@ -406,9 +406,9 @@
         $("#OppIdModal").modal("show");
       } else {
         document.getElementById(
-          "successModalBody"
+          "notificationModalBody"
         ).innerHTML = `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
-        $("#successModal").modal("show");
+        $("#notificationModal").modal("show");
       }
     } catch (e) {
       //! Triggers incase Error From Backend
@@ -418,6 +418,7 @@
 
   //! Get Checked Values from datafromRegionFilter
   function getCheckedValues() {
+
     //* Empty the Array
     newCheckedList = [];
 
@@ -431,9 +432,9 @@
     } catch (e) {
       //! Incase of No CheckBox Checked
       document.getElementById(
-        "successModalBody"
+        "notificationModalBody"
       ).innerHTML = `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
-      $("#successModal").modal("show");
+      $("#notificationModal").modal("show");
     }
   }
 
@@ -464,17 +465,17 @@
           //* Correct Opp ID, but empty Folder ID
           //* Redirect to Create Repo Link
           document.getElementById(
-              "successModalBody"
+              "notificationModalBody"
             ).innerHTML =
             `<h2>Error</h2><br /><p>Repo does not exists. Goto this <a href='${placeholderData[0]["Create Repo Link"]}' target='_blank'>link</a> to create</p>`;
-          $("#successModal").modal("show");
+          $("#notificationModal").modal("show");
         }
       } else {
         //* Invalid Project Code / opportunity ID
         document.getElementById(
-          "successModalBody"
+          "notificationModalBody"
         ).innerHTML = `<h2>Error</h2><br /><p>Opportunity ID / Project code does not exists</p>`;
-        $("#successModal").modal("show");
+        $("#notificationModal").modal("show");
       }
     } catch (e) {
       //! Triggers incase Error From Backend
@@ -482,7 +483,7 @@
     }
   }
 
-  // Open success modal with created templates details
+  // Open notification modal with created templates details
   function getTemplateURLs(urlParameter) {
     //! Hide Page Loader Modal
     $("#loadingModal").modal("hide");
@@ -499,7 +500,7 @@
 
       createdFiles +=
         `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId["Folder ID"]}' target="_blank">repository.</a></p>`;
-      createdFiles += `<ul>`;
+      createdFiles += `<ul id='newFiles'>`;
       for (var i = 0; i < newCheckedList.length; i++) {
         if (urlParameter[i][1]) {
           createdFiles +=
@@ -512,21 +513,21 @@
       }
       createdFiles += `</ul>`;
       if (partialFiles) {
-        notCreatedFiles += `<p>These files have not been created</p><ul>${notCreatedFilesList}</ul>`;
+        notCreatedFiles += `<p>--These files have not been created--</p><ul id='newFiles'>${notCreatedFilesList}</ul>`;
       }
-      document.getElementById("successModalBody").innerHTML = `${createdFiles + notCreatedFiles
+      document.getElementById("notificationModalBody").innerHTML = `${createdFiles + notCreatedFiles
               }`;
 
-      //! Open Success Modal
-      $("#successModal").modal("show");
+      //! Open notification Modal
+      $("#notificationModal").modal("show");
       console.log("Finished...");
     } else {
       document.getElementById(
-        "successModalBody"
+        "notificationModalBody"
       ).innerHTML = `No permission to drive`;
 
-      // Open Success Modal
-      $("#successModal").modal("show");
+      // Open notification Modal
+      $("#notificationModal").modal("show");
 
       console.log("Failed");
     }
@@ -538,26 +539,39 @@
     $("#loadingModal").modal("hide");
 
     document.getElementById(
-      "successModalBody"
+      "notificationModalBody"
     ).innerHTML = `<h2>Error</h2><br /><p>Your files have not been made</p>`;
-    $("#successModal").modal("show");
+    $("#notificationModal").modal("show");
     console.log("Failed");
   }
 
   //! Create Template Function
   function createTemplate() {
     try {
-      //! Show Loading Screen Modal until File Creation
-      $("#loadingModal").modal("show");
-      // console.log(eneteredOppId);
+      // Check the limit of file creation
+      var limit = placeholderData[0]["File creation limit"]
+      if (newCheckedList.length > limit) {
+        // alert(`You are not allowed to create more than ${limit} files`)
+        document.getElementById(
+            "notificationModalBody"
+          ).innerHTML =
+          `<h2>Hmm!! this will take a while!</h2><br /><p>You are not allowed to create more than ${limit} files.</p>`;
+        $("#notificationModal").modal("show");
+      } else {
+        //! Show Loading Screen Modal until File Creation
+        $("#loadingModal").modal("show");
+        // console.log(eneteredOppId);
 
-      var paramToBackend = [eneteredOppId, newCheckedList];
-      console.log("Starting...");
-      google.script.run
-        .withSuccessHandler(getTemplateURLs)
-        .withFailureHandler(errorTemplateURLs)
-        .withUserObject(this)
-        .createTemplate(paramToBackend);
+        var paramToBackend = [eneteredOppId, newCheckedList];
+        console.log("Starting...");
+        google.script.run
+          .withSuccessHandler(getTemplateURLs)
+          .withFailureHandler(errorTemplateURLs)
+          .withUserObject(this)
+          .createTemplate(paramToBackend);
+      }
+
+
     } catch (e) {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -568,9 +582,9 @@
   //! Display Modal for Backend Error
   function somethingWentWrong() {
     document.getElementById(
-      "successModalBody"
+      "notificationModalBody"
     ).innerHTML = `<p>Something went wrong</p>`;
-    $("#successModal").modal("show");
+    $("#notificationModal").modal("show");
   }
 
   // Close Opp id verification Modal
@@ -578,9 +592,9 @@
     $("#OppIdModal").modal("hide");
   }
 
-  // Close Success Modal
-  function closeSuccessModal() {
-    $("#successModal").modal("hide");
+  // Close notification Modal
+  function closeNotificationModal() {
+    $("#notificationModal").modal("hide");
   }
 </script>
 <!-- Imports for Bootstrap Bundle, JQuery -->
