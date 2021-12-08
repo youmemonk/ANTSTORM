@@ -249,6 +249,7 @@ function createTemplate(templatePara) {
     }
 
     //! Get Domain Name from Web Link, split by . and picks 0th index
+    //todo  change the domain name
     var domainName = templatePara[0]["Domain Name"].split(".")[0];
 
     for (var i = 0; i < idList.length; i++) {
@@ -265,7 +266,7 @@ function createTemplate(templatePara) {
 
         //! Strictly by Naming convention
         Name =
-          domainName.toUpperCase() +
+          domainName.toLowerCase() +
           " | " +
           idList[i]["Product"] +
           " | " +
