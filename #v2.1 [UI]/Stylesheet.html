@@ -3,6 +3,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
+    /* Page loader */
     body {
         font-family: 'Poppins', sans-serif;
         /* background: rgb(255, 255, 255);
@@ -17,6 +18,10 @@
         background-color: rgba(245, 245, 245, 0.87);
     }
 
+    .modal-backdrop{
+        opacity: 0.6 !important;
+    }
+
     .error {
         color: #FF2850;
     }
@@ -29,42 +34,23 @@
         color: #FFB414;
     }
 
-    /* body {
-        
-    } */
+    .uil-info-circle {
+        font-size: larger;
+        color: #7D7D7D;
+    }
 
     /* Tooltip for info button popup */
     #title {
         height: 100px;
         padding-top: 10px;
         margin: 30px;
-        /* background-color: #9aa09e; */
-        /* background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%); */
-
-        /* background: #FFB414;
-        background: -webkit-linear-gradient(to bottom, #FFFFFF, #FFB414);
-        background: linear-gradient(to bottom, #FFFFFF, #FFB414); */
-
-        /* background: rgb(255, 255, 255);
-        background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 180, 20, 1) 75%); */
-
-        /* background-color: #FFB414; */
-        /* background-color: #00DC96; */
-        /* background: radial-gradient(1.5em 6.28571em at 1.95em, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 55%, rgba(255, 255, 255, 0) 55%) 0 0, radial-gradient(1.5em 6.28571em at -0.45em, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 55%, rgba(255, 255, 255, 0) 55%) 1.5em 5.5em, radial-gradient(2.3em 4.57143em at 2.99em, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 55%, rgba(255, 255, 255, 0) 55%) 0 0, radial-gradient(2.3em 4.57143em at -0.69em, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 55%, rgba(255, 255, 255, 0) 55%) 2.3em 4em, radial-gradient(3.5em 6.28571em at 4.55em, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 55%, rgba(255, 255, 255, 0) 55%) 0 0, radial-gradient(3.5em 6.28571em at -1.05em, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 55%, rgba(255, 255, 255, 0) 55%) 3.5em 5.5em, radial-gradient(#00DC96, #00DC96);
-        background-color: #00DC96;
-        background-size: 1.5em 11em, 1.5em 11em, 2.3em 8em, 2.3em 8em, 3.5em 11em, 3.5em 11em, 100% 100%;
-        background-repeat: repeat; */
-
         background-color: #00DC96;
     }
 
     h1 {
         font-size: 60px;
         font-weight: bold;
-        /* color: rgb(22, 20, 20); */
-        /* color: #7D7D7D; */
         color: #000000;
-        /* color: whitesmoke; */
         font-family: 'Ubuntu', sans-serif;
     }
 
@@ -90,13 +76,6 @@
         font-size: 16px;
     }
 
-    /* .dropdownOptions {
-          border-radius: 20px;
-          background-color: hotpink;
-          width: 220px;
-          height: auto;
-      } */
-
     /* createTemplateBtnRow */
     #createTemplateBtnRow {
         margin-top: 60px;
@@ -108,8 +87,6 @@
     }
 
     .btn-grad {
-        /* margin: 8px;
-          padding: 7px 25px; */
         text-align: center;
         width: 200px;
         height: 40px;
@@ -124,7 +101,6 @@
 
     .btn-grad:hover {
         background-position: right center;
-        /* change the direction of the change here */
         color: #fff;
         text-decoration: none;
     }
@@ -143,7 +119,6 @@
 
     /* SearchBar */
     #searchText {
-        /* background-color: #ffd89b; */
         background-color: #E6E6E6;
         width: 250px;
         height: 40px;
@@ -152,10 +127,6 @@
         border-radius: 5px;
     }
 
-    /* select */
-    /* #createTemplateInfo{
-          font-size: 20px;
-      } */
     .tooltip1 {
         position: relative;
         display: inline-block;
@@ -181,16 +152,7 @@
         visibility: visible;
     }
 
-    /* table */
-    /* #table { */
-    /* background-color: blueviolet; */
-    /* border: grey 1px solid; */
-    /* border-radius: 4px; */
-    /* } */
-
     #tableHead {
-        /* background-color: #8EC5FC;
-        background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%); */
         background: rgb(40, 200, 225);
         background: linear-gradient(45deg, rgba(40, 200, 225, 1) 60%, rgba(83, 128, 242, 1) 100%, rgba(115, 75, 255, 1) 100%);
         text-align: center;
@@ -235,5 +197,105 @@
 
     #newFiles {
         text-align: left;
+    }
+
+
+    /* Page Loader */
+    #loader {
+
+        position: absolute;
+        top: calc(50% - 20px);
+        left: calc(50% - 20px);
+    }
+
+    @keyframes loader {
+        0% {
+            left: -100px
+        }
+
+        100% {
+            left: 110%;
+        }
+    }
+
+    #PageLoader h1 {
+        text-align: center;
+    }
+
+    #loadingMessage {
+        text-align: center;
+        justify-content: center;
+    }
+
+    #box {
+        width: 50px;
+        height: 50px;
+        background: #fff;
+        animation: animate .5s linear infinite;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 3px;
+    }
+
+    @keyframes animate {
+        17% {
+            border-bottom-right-radius: 3px;
+        }
+
+        25% {
+            transform: translateY(9px) rotate(22.5deg);
+        }
+
+        50% {
+            transform: translateY(18px) scale(1, .9) rotate(45deg);
+            border-bottom-right-radius: 40px;
+        }
+
+        75% {
+            transform: translateY(9px) rotate(67.5deg);
+        }
+
+        100% {
+            transform: translateY(0) rotate(90deg);
+        }
+    }
+
+    #shadow {
+        width: 50px;
+        height: 5px;
+        background: #000;
+        opacity: 0.1;
+        position: absolute;
+        top: 59px;
+        left: 0;
+        border-radius: 50%;
+        animation: shadow .5s linear infinite;
+    }
+
+    @keyframes shadow {
+        50% {
+            transform: scale(1.2, 1);
+        }
+    }
+
+    #PageLoader {
+        background: #6997DB;
+        /* background: #0064FF; */
+        /* background: hotpink; */
+        overflow: hidden;
+    }
+
+    h4 {
+        position: relative;
+        top: 100px;
+        /* left: 10px; */
+        margin: 0;
+        font-weight: 600;
+        /* opacity: .5; */
+        font-family: sans-serif;
+        /* background-color: #6997DB; */
+        /* font-weight: bold; */
+        color: #fff;
     }
 </style>

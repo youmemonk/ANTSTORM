@@ -76,7 +76,7 @@
             </div>
             <div class="col-3">
                 <span class="tooltip1" id="createTemplateInfo">
-                    <i class="uil uil-comment-exclamation"></i>
+                    <i class="uil uil-info-circle"></i>
                 </span>
                 <button type="button" onclick="openOppIdModal()" class="btn-grad">
                     CREATE TEMPLATE
@@ -128,14 +128,48 @@
             </div>
         </div>
 
+        <!-- Page Load  -->
+        <div class="modal modal-fullscreen text-center" id="PageLoader" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadMeLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <!-- <div class="modal-body text-center"> -->
+                    <div id="loader">
+                        <div id="shadow"></div>
+                        <div id="box"></div>
+                    </div>
+                    <div id="loadingMessage">
+                        <h4>LOADING</h4>
+                    </div>
+                <!-- </div> -->
+            </div>
+        </div>
+
+        <!-- Wait Spinner -->
+        <div class="modal fade" id="waitModal" tabindex="-1" aria-labelledby="loadMeLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-body text-center templateLoad">
+                    <div id="loader">
+                        <div id="shadow"></div>
+                        <div id="box"></div>
+                    </div>
+                    <div id="loadingMessage">
+                        <h4>Please Wait.</h4>
+                    </div>  
+                </div>
+            </div>
+        </div>
+
 
         <!-- Loading Spinner -->
         <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadMeLabel">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-body text-center">
-                    <div class="spinner-border text-info" style="width: 5rem; height: 5rem;" role="status">
-                        <span class="visually-hidden"></span>
+                <div class="modal-body text-center templateLoad">
+                    <div id="loader">
+                        <div id="shadow"></div>
+                        <div id="box"></div>
                     </div>
+                    <div id="loadingMessage">
+                        <h4>Creating Files! Please Wait.</h4>
+                    </div>  
                 </div>
             </div>
         </div>

@@ -1,8 +1,9 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
   // Loading screen to be added
-  // $(window).on('load', function() {
-  //     $('#loadingModal').modal('show');
-  // });
+  $(window).on('load', function () {
+    $('#PageLoader').modal('show');
+  });
 
   //* Server Side Function Call to Load MasterData
   //! Loads on WindowLoad
@@ -30,6 +31,7 @@
 
   //* Fetch mastersheetdata from Server Side
   function fetchMasterData(masterData) {
+    $("#PageLoader").modal("hide");
     if (masterData.length > 0) {
       console.log("Data Fetched");
 
@@ -44,7 +46,7 @@
       //! PassCreateTemplate Info to createTemplateInfo ID
       document.getElementById(
         "createTemplateInfo"
-      ).innerHTML = `<i class="uil uil-comment-exclamation"></i>
+      ).innerHTML = `<i class="uil uil-info-circle"></i>
         <span class="tooltiptext1">${placeholderData[0]["Create Template Info"]}</span>`;
 
       //! Onload Creates two arrays, on user Input
@@ -86,6 +88,21 @@
   function selectCycle() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
+
+    document.getElementById("BUDropdown").innerHTML =
+      `<select class="dropdown "> <option value = ""disabled selected > Select Business Unit(BU) </option> </select>`;
+
+    document.getElementById("productDropdown").innerHTML = ` <select name="product" id="product" class="dropdown">
+                        <option class="dropdownOptions" value="" disabled selected>Select Product
+                        </option>
+                    </select>`;
+
+    document.getElementById("regionDropdown").innerHTML = ` <select name="region" id="region" class="dropdown">
+                        <option value="" disabled selected>Select Region
+                        </option>
+                    </select>`;
+
+
 
     try {
       var cycleParameter = document.getElementById("Cycle").value;
@@ -144,6 +161,16 @@
   function selectBU() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
+    document.getElementById("productDropdown").innerHTML = ` <select name="product" id="product" class="dropdown">
+                        <option class="dropdownOptions" value="" disabled selected>Select Product
+                        </option>
+                    </select>`;
+
+    document.getElementById("regionDropdown").innerHTML = ` <select name="region" id="region" class="dropdown">
+                        <option value="" disabled selected>Select Region
+                        </option>
+                    </select>`;
+
 
     try {
       var BUparam = document.getElementById("BU").value;
@@ -155,10 +182,16 @@
       }
       //! Fetch Data of Sheet ID == SheetIndex
       //* Call to Server Side
+      $("#waitModal").modal("show");
+
       google.script.run
         .withSuccessHandler(fetchSelectedSheetData)
         .withUserObject(this)
         .fetchData(sheetIndex);
+
+      
+
+
     } catch (e) {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -167,6 +200,7 @@
 
   //! Gets all the Data from the MasterSheet after selection of BU
   function fetchSelectedSheetData(sheetDataParam) {
+    $("#waitModal").modal("hide");
     if (sheetDataParam.length > 0) {
       selectedSheetData = sheetDataParam;
 
@@ -202,6 +236,11 @@
   function selectProduct() {
     //! Empty Table incase of Dropdown Change
     document.getElementById("table").innerHTML = "<div></div>";
+    document.getElementById("regionDropdown").innerHTML = ` <select name="region" id="region" class="dropdown">
+                        <option value="" disabled selected>Select Region
+                        </option>
+                    </select>`;
+
     try {
       //* Empty the Array
       dataFromProductFilter = [];
@@ -337,7 +376,7 @@
             `<td class="tableElementCenter">` +
             `<a href=${itemData["Document Link"]}  target="_blank">
                                             <img src=${image}
-                                            alt="Err" width="45" height="auto"></a>` +
+                                            alt="Err" width="40" height="auto"></a>` +
             "</td>";
 
           //! For Empty Document Description, add From here.
@@ -603,4 +642,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
