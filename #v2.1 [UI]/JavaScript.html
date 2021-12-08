@@ -623,7 +623,7 @@
   function somethingWentWrong() {
     document.getElementById(
       "notificationModalBody"
-    ).innerHTML = `<p>Something went wrong</p>`;
+    ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Something Went Wrong!</p>`;
     $("#notificationModal").modal("show");
   }
 
