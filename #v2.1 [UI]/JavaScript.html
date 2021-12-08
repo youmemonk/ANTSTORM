@@ -75,7 +75,7 @@
 
       // Populate cycle dropdown after fetching mapping data
       document.getElementById("cycleDropdown").innerHTML =
-        '<select name="Cycle" id="Cycle" onchange="selectCycle()"  class="dropdown"><option value="" disabled selected>Select a Business cycle</  option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>';
+        '<select name="Cycle" id="Cycle" onchange="selectCycle()"  class="dropdown"><option value="" disabled selected>Select Business cycle</  option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>';
     } else {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -133,7 +133,7 @@
       document.getElementById(
           "BUDropdown"
         ).innerHTML =
-        `<select id="BU" onchange="selectBU()"  class="dropdown"> + "<option value="" disabled selected>Choose a Business Unit (BU)</option>" + ${tempOptionsList.join()} + </select>`;
+        `<select id="BU" onchange="selectBU()"  class="dropdown"> + "<option value="" disabled selected>Select Business Unit (BU)</option>" + ${tempOptionsList.join()} + </select>`;
     } catch (e) {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -190,7 +190,7 @@
 
       document.getElementById(
         "productDropdown"
-      ).innerHTML = `<select id="product" onchange="selectProduct()"  class="dropdown"> + "<option value="" disabled selected>Choose a Product
+      ).innerHTML = `<select id="product" onchange="selectProduct()"  class="dropdown"> + "<option value="" disabled selected>Select Product
             </option>" +  ${productOptionsList.join()} + </select>`;
     } else {
       //! Triggers incase Error From Backend
@@ -225,7 +225,7 @@
       }
       document.getElementById(
         "regionDropdown"
-      ).innerHTML = `<select id="region" onchange="selectRegion()" class="dropdown"> + "<option value="" disabled selected>Choose a Region
+      ).innerHTML = `<select id="region" onchange="selectRegion()" class="dropdown"> + "<option value="" disabled selected>Select Region
             </option>" +  ${regionOptionsList.join()} + </select>`;
     } catch (e) {
       //! Triggers incase Error From Backend
@@ -256,7 +256,7 @@
 
       //! Display Search Bar from JS
       document.getElementById("searchBar").innerHTML =
-        '<input type="text" id="searchText" placeholder="Type Document Name" oninput="searchByText()">';
+        `<input type="text" id="searchText" placeholder="&#xF002; Search Documents" oninput="searchByText()" style="font-family:Poppins, FontAwesome">`;
 
       //! Table Populates at this Stage.
       dataPopulation(dataFromRegionFilter);
@@ -407,7 +407,7 @@
       } else {
         document.getElementById(
           "notificationModalBody"
-        ).innerHTML = `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
+        ).innerHTML = `<h2 class="error">Error!</h2><br /><p>You Have Not Selected Anything.</p>`;
         $("#notificationModal").modal("show");
       }
     } catch (e) {
@@ -433,7 +433,7 @@
       //! Incase of No CheckBox Checked
       document.getElementById(
         "notificationModalBody"
-      ).innerHTML = `<h2>Error</h2><br /><p>You Have Not Selected Anything</p>`;
+      ).innerHTML = `<h2 class="error">Error!</h2><br /><p>You Have Not Selected Anything.</p>`;
       $("#notificationModal").modal("show");
     }
   }
@@ -467,14 +467,14 @@
           document.getElementById(
               "notificationModalBody"
             ).innerHTML =
-            `<h2>Error</h2><br /><p>Repo does not exists. Goto this <a href='${placeholderData[0]["Create Repo Link"]}' target='_blank'>link</a> to create</p>`;
+            `<h2 class="error">Error!</h2><br /><p>This Repo does not exist. Go to this <a href='${placeholderData[0]["Create Repo Link"]}' target='_blank'>Link</a> to create.</p>`;
           $("#notificationModal").modal("show");
         }
       } else {
         //* Invalid Project Code / opportunity ID
         document.getElementById(
           "notificationModalBody"
-        ).innerHTML = `<h2>Error</h2><br /><p>Opportunity ID / Project code does not exists</p>`;
+        ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Opportunity ID / Project code does not exist.</p>`;
         $("#notificationModal").modal("show");
       }
     } catch (e) {
@@ -499,7 +499,7 @@
       var notCreatedFilesList = "";
 
       createdFiles +=
-        `<h2>Yayyy!! your files are ready!!</h2><br /><p>You’re files have been successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId["Folder ID"]}' target="_blank">repository.</a></p>`;
+        `<h2 class="success">Your Files Are Ready!</h2><br /><p>Your Files are successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId["Folder ID"]}' target="_blank">Repository</a>!</p>`;
       createdFiles += `<ul id='newFiles'>`;
       for (var i = 0; i < newCheckedList.length; i++) {
         if (urlParameter[i][1]) {
@@ -513,7 +513,7 @@
       }
       createdFiles += `</ul>`;
       if (partialFiles) {
-        notCreatedFiles += `<p>--These files have not been created--</p><ul id='newFiles'>${notCreatedFilesList}</ul>`;
+        notCreatedFiles += `<p>--These files could not be created--</p><ul id='newFiles'>${notCreatedFilesList}</ul>`;
       }
       document.getElementById("notificationModalBody").innerHTML = `${createdFiles + notCreatedFiles
               }`;
@@ -524,7 +524,8 @@
     } else {
       document.getElementById(
         "notificationModalBody"
-      ).innerHTML = `No permission to drive`;
+      ).innerHTML = `<h2 class="error">Looks like We Found an Imposter!</h2><br /><p>Sorry! You’re not authorized to access these files. You need to be part of the Project or Opportunity Team to create files in the Repository.
+</p>`;
 
       // Open notification Modal
       $("#notificationModal").modal("show");
@@ -540,7 +541,7 @@
 
     document.getElementById(
       "notificationModalBody"
-    ).innerHTML = `<h2>Error</h2><br /><p>Your files have not been made</p>`;
+    ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Sorry! Your Files could not be made.</p>`;
     $("#notificationModal").modal("show");
     console.log("Failed");
   }
@@ -555,7 +556,7 @@
         document.getElementById(
             "notificationModalBody"
           ).innerHTML =
-          `<h2>Hmm!! this will take a while!</h2><br /><p>You are not allowed to create more than ${limit} files.</p>`;
+          `<h2 class="wait">This Might take a While!</h2><br /><p>You're not allowed to create more than ${limit} Files.</p>`;
         $("#notificationModal").modal("show");
       } else {
         //! Show Loading Screen Modal until File Creation
