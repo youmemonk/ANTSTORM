@@ -1,0 +1,649 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  // Loading screen to be added
+  $(window).on('load', function () {
+    $('#PageLoader').modal('show');
+  });
+
+  //* Server Side Function Call to Load MasterData
+  //! Loads on WindowLoad
+  google.script.run
+    .withSuccessHandler(fetchMasterData)
+    .withUserObject(this)
+    .rootFolderMapping();
+
+  //! All Global Variable Declarations
+  var rootSheetData;
+  var delArray = [];
+  var consArray = [];
+  var buNameMaping = {};
+  var productNameMaping = {};
+  var logoData = [];
+  var tempBU = [];
+  var buList = [];
+  var selectedSheetData;
+  var dataFromProductFilter = [];
+  var dataFromRegionFilter = [];
+  var dataFromSearchFilter = [];
+  var dataInputToTable = [];
+  var newCheckedList = [];
+  var eneteredOppId;
+
+  //* Fetch mastersheetdata from Server Side
+  function fetchMasterData(masterData) {
+    $("#PageLoader").modal("hide");
+    if (masterData.length > 0) {
+      console.log("Data Fetched");
+
+      rootSheetData = masterData[0];
+      buSheetData = masterData[1];
+      productSheetData = masterData[2];
+      regionSheetData = masterData[3];
+      logoData = masterData[4];
+      repoLogsData = masterData[5];
+      placeholderData = masterData[6];
+
+      //! PassCreateTemplate Info to createTemplateInfo ID
+      document.getElementById(
+        "createTemplateInfo"
+      ).innerHTML = `<i class="uil uil-info-circle"></i>
+        <span class="tooltiptext1">${placeholderData[0]["Create Template Info"]}</span>`;
+
+      //! Onload Creates two arrays, on user Input
+      //* Get Delivery Array
+      for (var i = 0; i < rootSheetData.length; i++) {
+        if (rootSheetData[i]["BU"].includes("Delivery")) {
+          delArray.push(rootSheetData[i]);
+        }
+      }
+
+      //* Get Consulting Array
+      for (var i = 0; i < rootSheetData.length; i++) {
+        if (rootSheetData[i]["BU"].includes("Consulting")) {
+          consArray.push(rootSheetData[i]);
+        }
+      }
+
+      //! Convert buSheetData to BU code: BU full name mapping object
+      for (var i = 0; i < buSheetData.length; i++) {
+        buNameMaping[buSheetData[i]["BU Code"]] =
+          buSheetData[i]["Business Unit (As received from SFDC)"];
+      }
+      //! Convert productSheetData to Product code: Product full name mapping object
+      for (var i = 0; i < productSheetData.length; i++) {
+        productNameMaping[productSheetData[i]["Product Code"]] =
+          productSheetData[i]["Product Name"];
+      }
+
+      // Populate cycle dropdown after fetching mapping data
+      document.getElementById("cycleDropdown").innerHTML =
+        '<select name="Cycle" id="Cycle" onchange="selectCycle()"  class="dropdown"><option value="" disabled selected>Select Business cycle</  option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>';
+    } else {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //* Get Selected Cycle Data from RootSheet
+  function selectCycle() {
+    //! Empty Table incase of Dropdown Change
+    document.getElementById("table").innerHTML = "<div></div>";
+
+    document.getElementById("BUDropdown").innerHTML =
+      `<select class="dropdown "> <option value = ""disabled selected > Select Business Unit(BU) </option> </select>`;
+
+    document.getElementById("productDropdown").innerHTML = ` <select name="product" id="product" class="dropdown">
+                        <option class="dropdownOptions" value="" disabled selected>Select Product
+                        </option>
+                    </select>`;
+
+    document.getElementById("regionDropdown").innerHTML = ` <select name="region" id="region" class="dropdown">
+                        <option value="" disabled selected>Select Region
+                        </option>
+                    </select>`;
+
+
+
+    try {
+      var cycleParameter = document.getElementById("Cycle").value;
+
+      if (cycleParameter == "Delivery") {
+        for (var i = 0; i < delArray.length; i++) {
+          tempBU.push([
+            delArray[i]["BU"].split(" ")[0],
+            delArray[i]["Template File ID"],
+          ]);
+        }
+
+        buList = tempBU.slice();
+        tempBU = [];
+
+        document.getElementById(
+          "oppIdInput"
+        ).innerHTML = `<input id="opportunityId" type='text' placeholder="Enter the Project Code">`;
+      } else {
+        for (var i = 0; i < consArray.length; i++) {
+          tempBU.push([
+            consArray[i]["BU"].split(" ")[0],
+            consArray[i]["Template File ID"],
+          ]);
+        }
+
+        buList = tempBU.slice();
+        tempBU = [];
+
+        document.getElementById(
+          "oppIdInput"
+        ).innerHTML = `<input id="opportunityId" type='text' placeholder="Enter the Opportunity Id">`;
+      }
+
+      //* Populate Next Dropdown
+      var tempOptionsList = [];
+      for (var i = 0; i < buList.length; i++) {
+        tempOptionsList.push(
+          `<option value="${buList[i][0]}">` +
+          buNameMaping[buList[i][0]] +
+          "</option>"
+        );
+      }
+
+      document.getElementById(
+          "BUDropdown"
+        ).innerHTML =
+        `<select id="BU" onchange="selectBU()"  class="dropdown"> + "<option value="" disabled selected>Select Business Unit (BU)</option>" + ${tempOptionsList.join()} + </select>`;
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //* Get Business Units from selected Cycle
+  function selectBU() {
+    //! Empty Table incase of Dropdown Change
+    document.getElementById("table").innerHTML = "<div></div>";
+    document.getElementById("productDropdown").innerHTML = ` <select name="product" id="product" class="dropdown">
+                        <option class="dropdownOptions" value="" disabled selected>Select Product
+                        </option>
+                    </select>`;
+
+    document.getElementById("regionDropdown").innerHTML = ` <select name="region" id="region" class="dropdown">
+                        <option value="" disabled selected>Select Region
+                        </option>
+                    </select>`;
+
+
+    try {
+      var BUparam = document.getElementById("BU").value;
+      var sheetIndex;
+      for (var i = 0; i < buList.length; i++) {
+        if (buList[i][0] == BUparam) {
+          sheetIndex = buList[i][1];
+        }
+      }
+      //! Fetch Data of Sheet ID == SheetIndex
+      //* Call to Server Side
+      $("#waitModal").modal("show");
+
+      google.script.run
+        .withSuccessHandler(fetchSelectedSheetData)
+        .withUserObject(this)
+        .fetchData(sheetIndex);
+
+
+
+
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //! Gets all the Data from the MasterSheet after selection of BU
+  function fetchSelectedSheetData(sheetDataParam) {
+    $("#waitModal").modal("hide");
+    if (sheetDataParam.length > 0) {
+      selectedSheetData = sheetDataParam;
+
+      // Search & Store available product codes in fetched sheet
+      var availableProduct = [];
+      for (var i = 0; i < selectedSheetData.length; i++) {
+        availableProduct.push(selectedSheetData[i]["Product"]);
+      }
+
+      //! Store Unique Products
+      var uniqueAvailableProds = [...new Set(availableProduct)];
+
+      // Populate product dropdown from uniqueAvailableProds
+      var productOptionsList = [];
+      for (var i = 0; i < uniqueAvailableProds.length; i++) {
+        productOptionsList[i] =
+          `<option value="${uniqueAvailableProds[i]}">` +
+          uniqueAvailableProds[i] +
+          "</option>";
+      }
+
+      document.getElementById(
+        "productDropdown"
+      ).innerHTML = `<select id="product" onchange="selectProduct()"  class="dropdown"> + "<option value="" disabled selected>Select Product
+            </option>" +  ${productOptionsList.join()} + </select>`;
+    } else {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //* Get Products from selected Business Unit
+  function selectProduct() {
+    //! Empty Table incase of Dropdown Change
+    document.getElementById("table").innerHTML = "<div></div>";
+    document.getElementById("regionDropdown").innerHTML = ` <select name="region" id="region" class="dropdown">
+                        <option value="" disabled selected>Select Region
+                        </option>
+                    </select>`;
+
+    try {
+      //* Empty the Array
+      dataFromProductFilter = [];
+
+      for (var i = 0; i < selectedSheetData.length; i++) {
+        if (
+          selectedSheetData[i]["Product"] ==
+          document.getElementById("product").value
+        ) {
+          dataFromProductFilter.push(selectedSheetData[i]);
+        }
+      }
+
+      // Populate region dropdown
+      var regionOptionsList = [];
+      for (var i = 0; i < regionSheetData.length; i++) {
+        regionOptionsList[i] =
+          `<option value=${regionSheetData[i]["Region"]}>` +
+          regionSheetData[i]["Region"] +
+          "</option>";
+      }
+      document.getElementById(
+        "regionDropdown"
+      ).innerHTML = `<select id="region" onchange="selectRegion()" class="dropdown"> + "<option value="" disabled selected>Select Region
+            </option>" +  ${regionOptionsList.join()} + </select>`;
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //* Get Regions from selected Product
+  function selectRegion() {
+    //! Empty Table incase of Dropdown Change
+    document.getElementById("table").innerHTML = "<div></div>";
+
+    try {
+      //* Empty the Array
+      dataFromRegionFilter = [];
+
+      var regionIndex = document.getElementById("region").value;
+      for (var i = 0; i < dataFromProductFilter.length; i++) {
+        if (
+          //! Both for: specific mentioned Region or avail for ALL
+          dataFromProductFilter[i]["Region"].toUpperCase() == "ALL" ||
+          dataFromProductFilter[i]["Region"] == regionIndex
+        ) {
+          dataFromProductFilter[i]["checked"] = false;
+          dataFromRegionFilter.push(dataFromProductFilter[i]);
+        } // no else
+      }
+
+      //! Display Search Bar from JS
+      document.getElementById("searchBar").innerHTML =
+        `<input type="text" id="searchText" placeholder="&#xF002; Search Documents" oninput="searchByText()" style="font-family:Poppins, FontAwesome">`;
+
+      //! Table Populates at this Stage.
+      dataPopulation(dataFromRegionFilter);
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //! Searches by Text inside Loaded Table
+  function searchByText() {
+    try {
+      //! Empty the Array
+      dataFromSearchFilter = [];
+
+      var searchText = document.getElementById("searchText").value.toLowerCase(); //* case insensitive
+      for (var i = 0; i < dataFromRegionFilter.length; i++) {
+        if (
+          dataFromRegionFilter[i]["Document Name & Link"]
+          .toLowerCase()
+          .includes(searchText)
+        ) {
+          dataFromSearchFilter.push(dataFromRegionFilter[i]);
+        }
+      }
+      //! Show Searched Data into Table
+      dataPopulation(dataFromSearchFilter);
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //! Populates the Table through temp & innerHTML
+  function dataPopulation(e) {
+    try {
+      var tableData = e;
+      dataInputToTable = e;
+      //! Push tableHeader
+      var tableHeader =
+        '<table class=\'table table-bordered\' id="tableData"><thead id="tableHead"> <tr><th> Select</th> <th> Document Name </th> <th> View </th> <th > Description </th> <th> Product </th> </tr> </thead> <tbody id = "tableBody" ><!-- Data comes here--></tbody></table>';
+      document.getElementById("table").innerHTML = tableHeader;
+
+      //! Parameters for table Population
+      var temp = [];
+      var i = 0;
+      if (tableData.length > 0) {
+        tableData.forEach((itemData) => {
+          //! Table Data Population Starts
+          temp += "<tr>";
+          //! Check for Already checked Rows
+          if (itemData["checked"]) {
+            temp +=
+              `<td class="tableElementCenter">` +
+              `<label><input class="checkbox" type="checkbox" checked='true' id=${itemData["Document Link"]} 
+                        onchange="stickyCheckbox(this, ${i})"/><span></span></label>` +
+              "</td>";
+          } else {
+            temp +=
+              `<td class="tableElementCenter">` +
+              `<label><input class="checkbox" type="checkbox" id=${itemData["Document Link"]} 
+                        onchange="stickyCheckbox(this, ${i})"/><span></span></label>` +
+              "</td>";
+          }
+          temp += "<td>" + itemData["Document Name & Link"] + "</td>";
+
+          var image = "";
+          image = logoData[0]["logo"];
+          //Loop through document logo sheet data
+          for (var j = 1; j < logoData.length; j++) {
+            var re = new RegExp(logoData[j]["Document type"], "g");
+            if (re.test(itemData["Document Link"])) {
+              image = logoData[j]["logo"];
+              break;
+            }
+          }
+          temp +=
+            `<td class="tableElementCenter">` +
+            `<a href=${itemData["Document Link"]}  target="_blank">
+                                            <img src=${image}
+                                            alt="Err" width="40" height="auto"></a>` +
+            "</td>";
+
+          //! For Empty Document Description, add From here.
+          if (!itemData["Document Description"]) {
+            itemData["Document Description"] =
+              placeholderData[0]["Empty Description"];
+          }
+          temp += "<td>" + itemData["Document Description"] + "</td>";
+          temp += `<td class="tableElementCenter">` + itemData["Product"] + "</td>";
+          i++;
+        });
+      } else {
+        //! For No Data from MasterSheet
+        var temp = errorfunction();
+      }
+      //! Sending to Table Body
+      document.getElementById("tableBody").innerHTML = temp;
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //! If SearchText is not found in table
+  function errorfunction() {
+    var e = "No Records Found";
+    return e;
+  }
+
+  // Checkbox trigger onchange function
+  function stickyCheckbox(state, rowID) {
+    if (state.checked) {
+      //! Assign Checked Value
+      dataInputToTable[rowID]["checked"] = true;
+
+      for (var i = 0; i < dataFromRegionFilter.length; i++) {
+        if (
+          //! If Element Matches, change the Checked Status to True
+          dataFromRegionFilter[i]["Document Link"] ==
+          dataInputToTable[rowID]["Document Link"]
+        ) {
+          dataFromRegionFilter[i]["Checked"] = true;
+          break;
+        }
+      }
+    } else {
+      //! If Element Matches, change the Checked Status to True
+      dataInputToTable[rowID]["checked"] = false;
+      for (var i = 0; i < dataFromRegionFilter.length; i++) {
+        if (
+          dataFromRegionFilter[i]["Document Link"] ==
+          dataInputToTable[rowID]["Document Link"]
+        ) {
+          dataFromRegionFilter[i]["Checked"] = false;
+          break;
+        }
+      }
+    }
+  }
+
+  //! Open Opp id verification Modal
+  function openOppIdModal() {
+    try {
+      getCheckedValues();
+      if (newCheckedList.length > 0) {
+        $("#OppIdModal").modal("show");
+      } else {
+        document.getElementById(
+          "notificationModalBody"
+        ).innerHTML = `<h2 class="error">Error!</h2><br /><p>You Have Not Selected Anything.</p>`;
+        $("#notificationModal").modal("show");
+      }
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  //! Get Checked Values from datafromRegionFilter
+  function getCheckedValues() {
+
+    //* Empty the Array
+    newCheckedList = [];
+
+    try {
+      for (var i = 0; i < dataFromRegionFilter.length; i++) {
+        if (dataFromRegionFilter[i]["checked"]) {
+          newCheckedList.push(dataFromRegionFilter[i]);
+        }
+      }
+      // console.log(newCheckedList);
+    } catch (e) {
+      //! Incase of No CheckBox Checked
+      document.getElementById(
+        "notificationModalBody"
+      ).innerHTML = `<h2 class="error">Error!</h2><br /><p>You Have Not Selected Anything.</p>`;
+      $("#notificationModal").modal("show");
+    }
+  }
+
+  //! Verifies Opp id/Project code and sets domain name, folder ID for chosen Opp ID
+  function verifyOppId() {
+    try {
+      //! Close Opp Id Modal
+      $("#OppIdModal").modal("hide");
+
+      //! Prerequisite parameters
+      var oppId = document.getElementById("opportunityId").value;
+      var flag = false;
+      //! Flag Turns true after matching Correct Opportunity ID / Project Code
+
+      for (var i = 0; i < repoLogsData.length; i++) {
+        if (repoLogsData[i]["Opportunity ID"] == oppId) {
+          eneteredOppId = repoLogsData[i];
+          flag = true;
+          break; // match found -> break out of loop.
+        }
+      }
+      if (flag) {
+        //is true
+        if (eneteredOppId["Folder ID"]) {
+          //function call to create template/
+          createTemplate();
+        } else {
+          //* Correct Opp ID, but empty Folder ID
+          //* Redirect to Create Repo Link
+          document.getElementById(
+              "notificationModalBody"
+            ).innerHTML =
+            `<h2 class="error">Error!</h2><br /><p>This Repo does not exist. Go to this <a href='${placeholderData[0]["Create Repo Link"]}' target='_blank'>Link</a> to create.</p>`;
+          $("#notificationModal").modal("show");
+        }
+      } else {
+        //* Invalid Project Code / opportunity ID
+        document.getElementById(
+          "notificationModalBody"
+        ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Opportunity ID / Project code does not exist.</p>`;
+        $("#notificationModal").modal("show");
+      }
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+
+  // Open notification modal with created templates details
+  function getTemplateURLs(urlParameter) {
+    //! Hide Page Loader Modal
+    $("#loadingModal").modal("hide");
+
+    //! PartialFiles is a flag to check for Files that could not be created.
+    var partialFiles = false;
+
+    //* For Files that have no Make Copy Access {Drive Permission}
+    if (urlParameter.length > 0) {
+      //! Message for Modals
+      var createdFiles = "";
+      var notCreatedFiles = "";
+      var notCreatedFilesList = "";
+
+      createdFiles +=
+        `<h2 class="success">Your Files Are Ready!</h2><br /><p>Your Files are successfully created in the <a href='https://drive.google.com/drive/folders/${eneteredOppId["Folder ID"]}' target="_blank">Repository</a>!</p>`;
+      createdFiles += `<ul id='newFiles'>`;
+      for (var i = 0; i < newCheckedList.length; i++) {
+        if (urlParameter[i][1]) {
+          createdFiles +=
+            `<li><a href=${urlParameter[i]} target="_blank">${newCheckedList[i]["Document Name & Link"]}</a><br /></li>`;
+        } else {
+          //  console.log('partial files made')
+          partialFiles = true;
+          notCreatedFilesList += `<li>${newCheckedList[i]["Document Name & Link"]}</li>`;
+        }
+      }
+      createdFiles += `</ul>`;
+      if (partialFiles) {
+        notCreatedFiles += `<p>--These files could not be created--</p><ul id='newFiles'>${notCreatedFilesList}</ul>`;
+      }
+      document.getElementById("notificationModalBody").innerHTML = `${createdFiles + notCreatedFiles
+              }`;
+
+      //! Open notification Modal
+      $("#notificationModal").modal("show");
+      console.log("Finished...");
+    } else {
+      document.getElementById(
+        "notificationModalBody"
+      ).innerHTML = `<h2 class="error">Looks like We Found an Imposter!</h2><br /><p>Sorry! You’re not authorized to access these files. You need to be part of the Project or Opportunity Team to create files in the Repository.
+</p>`;
+
+      // Open notification Modal
+      $("#notificationModal").modal("show");
+
+      console.log("Failed");
+    }
+  }
+
+  //! Server Side Error in File Making -> Modal
+  function errorTemplateURLs() {
+    //! Hide Loading Screen Modal
+    $("#loadingModal").modal("hide");
+
+    document.getElementById(
+      "notificationModalBody"
+    ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Sorry! Your Files could not be made.</p>`;
+    $("#notificationModal").modal("show");
+    console.log("Failed");
+  }
+
+  //! Create Template Function
+  function createTemplate() {
+    try {
+      // Check the limit of file creation
+      var limit = placeholderData[0]["File creation limit"]
+      if (newCheckedList.length > limit) {
+        // alert(`You are not allowed to create more than ${limit} files`)
+        document.getElementById(
+            "notificationModalBody"
+          ).innerHTML =
+          `<h2 class="wait">This Might take a While!</h2><br /><p>You're not allowed to create more than ${limit} Files.</p>`;
+        $("#notificationModal").modal("show");
+      } else {
+        //! Show Loading Screen Modal until File Creation
+        $("#loadingModal").modal("show");
+        // console.log(eneteredOppId);
+
+        var paramToBackend = [eneteredOppId, newCheckedList];
+        console.log("Starting...");
+        google.script.run
+          .withSuccessHandler(getTemplateURLs)
+          .withFailureHandler(errorTemplateURLs)
+          .withUserObject(this)
+          .createTemplate(paramToBackend);
+      }
+
+
+    } catch (e) {
+      //! Triggers incase Error From Backend
+      somethingWentWrong();
+    }
+  }
+  //! <----- Modals ----->
+
+  //! Display Modal for Backend Error
+  function somethingWentWrong() {
+    document.getElementById(
+      "notificationModalBody"
+    ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Something Went Wrong!</p>`;
+    $("#notificationModal").modal("show");
+  }
+
+  // Close Opp id verification Modal
+  function closeOppIdModal() {
+    $("#OppIdModal").modal("hide");
+  }
+
+  // Close notification Modal
+  function closeNotificationModal() {
+    $("#notificationModal").modal("hide");
+  }
+</script>
+<!-- Imports for Bootstrap Bundle, JQuery -->
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+</script>
+
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
