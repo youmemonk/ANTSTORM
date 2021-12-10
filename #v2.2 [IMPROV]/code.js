@@ -23,7 +23,7 @@ function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
-//! Global Links for RootMasterSheet, MappingSheet, OP ID Sheet, &  ErrorLogSheet
+//! Global Links for RootMasterSheet, MappingSheet, OP ID Sheet, & ErrorLogSheet
 var rootSheetID = "1DeJwac2x9nToJDZq9G1fwa0DNIzZGIj5oe1Wrz3Rd68";
 var mappingSheetID = "1Q8gnjmhrr-Awn12zXdREcemn8kOMTFdw9RPJbXtQQUg";
 var logsSheet = "1HlasqxpVjIhnzcydDuJXxEG9iOvFWI72wlKwnhC9U_g";

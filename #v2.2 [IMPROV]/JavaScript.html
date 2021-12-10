@@ -79,7 +79,7 @@
 
       // Populate cycle dropdown after fetching mapping data
       document.getElementById("cycleDropdown").innerHTML =
-        '<select name="Cycle" id="Cycle" onchange="selectCycle()"  class="dropdown"><option value="" disabled selected>Select Business cycle</  option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>';
+        '<select name="Cycle" id="Cycle" onchange="selectCycle()"  class="dropdown"><option value="" disabled selected>Select Sales cycle</  option><option value="Consulting">Consulting</option><option value="Delivery">Delivery</option></select>';
     } else {
       //! Triggers incase Error From Backend
       somethingWentWrong();
@@ -297,7 +297,7 @@
 
       //! Display Search Bar from JS
       document.getElementById("searchBar").innerHTML =
-        `<input type="text" id="searchText" placeholder="&#xF002;    search your documents" oninput="searchByText()" style="font-family:Poppins, FontAwesome">`;
+        `<input type="text" id="searchText" placeholder=" &#xF002;   search your documents" oninput="searchByText()" style="font-family:Poppins, FontAwesome">`;
 
       //! Table Populates at this Stage.
       dataPopulation(dataFromRegionFilter);
@@ -385,8 +385,12 @@
           if (!itemData["Document Description"]) {
             itemData["Document Description"] =
               placeholderData[0]["Empty Description"];
+              temp += "<td id='emptyDesc'>" + itemData["Document Description"] + "</td>";
           }
-          temp += "<td>" + itemData["Document Description"] + "</td>";
+          else{
+            temp += "<td>" + itemData["Document Description"] + "</td>";
+          }
+          
           temp += `<td class="tableElementCenter">` + itemData["Product"] + "</td>";
           i++;
         });
@@ -568,7 +572,7 @@
       var notCreatedFilesList = "";
 
       createdFiles +=
-        `<h2 class="success">${placeholderData[0]['Files created']}</h2><br /><p>${placeholderData[1]['Files created']}<br /><a href='https://drive.google.com/drive/folders/${eneteredOppId["Folder ID"]}' target="_blank">Repository</a></p>`;
+        `<h2 class="success">${placeholderData[0]['Files created']}</h2><br /><p>${placeholderData[1]['Files created']}<br /><span><a href='https://drive.google.com/drive/folders/${eneteredOppId["Folder ID"]}' target="_blank">Repository</a></span></p>`;
       createdFiles += `<ul id='newFiles'>`;
       for (var i = 0; i < newCheckedList.length; i++) {
         if (urlParameter[i][1]) {
@@ -609,8 +613,9 @@
     $("#loadingModal").modal("hide");
 
     document.getElementById(
-      "notificationModalBody"
-    ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Sorry! Your Files could not be made.</p>`;
+        "notificationModalBody"
+      ).innerHTML =
+      `<h2 class="error">${placeholderData[0]['Files not created']}</h2><br /><p>${placeholderData[1]['Files not created']}</p>`;
     $("#notificationModal").modal("show");
     console.log("Failed");
   }
@@ -625,7 +630,7 @@
         document.getElementById(
             "notificationModalBody"
           ).innerHTML =
-          `<h2 class="wait">This Might take a While!</h2><br /><p>You're not allowed to create more than ${limit} Files.</p>`;
+          `<h2 class="wait">${placeholderData[0]['More than Limit']}</h2><br /><p>${placeholderData[1]['More than Limit']}<br /><span>LIMIT: ${placeholderData[0]['File creation limit']}</span></p>`;
         $("#notificationModal").modal("show");
       } else {
         //! Show Loading Screen Modal until File Creation
@@ -652,8 +657,9 @@
   //! Display Modal for Backend Error
   function somethingWentWrong() {
     document.getElementById(
-      "notificationModalBody"
-    ).innerHTML = `<h2 class="error">Error!</h2><br /><p>Something Went Wrong!</p>`;
+        "notificationModalBody"
+      ).innerHTML =
+      `<h2 class="error">${placeholderData[0]['Backend Error']}</h2><br /><p>${placeholderData[1]['Backend Error']}</p>`;
     $("#notificationModal").modal("show");
   }
 
