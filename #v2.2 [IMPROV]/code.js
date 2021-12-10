@@ -252,9 +252,7 @@ function createTemplate(templatePara) {
 
     //! Get Domain Name from Web Link, split by . and picks 0th index
     var reg = /(\w{2,}\.\w{2,3}\.\w{2,3}|\w[A-Za-z0-9-_]{2,}\.\w{2,3})$/;
-    // var domainName = templatePara[0]['Domain Name'].match(reg)[0].split('.')[0]
     var domainName = templatePara[0]["Domain Name"].match(reg)[0];
-    // var domainName = templatePara[0]["Domain Name"].split(".")[0];
 
     for (var i = 0; i < idList.length; i++) {
       try {
@@ -343,4 +341,4 @@ function arrayToJSONObject(fileList) {
 //! Use InCase, to calculate Execution Time for a Function Call
 // var startTime = (new Date()).getTime()
 // var endTime = (new Date()).getTime()
-// Logger.log(`Call to Arraywala took ${endTime - startTime} milliseconds`)
+// Logger.log(`Call to Function took ${endTime - startTime} milliseconds`)
