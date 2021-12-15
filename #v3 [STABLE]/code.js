@@ -23,7 +23,7 @@ function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
-//! Global Links for RootMasterSheet, MappingSheet, OP ID Sheet, &  ErrorLogSheet
+//! Global Links for RootMasterSheet, MappingSheet, OP ID Sheet, & ErrorLogSheet
 var rootSheetID = "1DeJwac2x9nToJDZq9G1fwa0DNIzZGIj5oe1Wrz3Rd68";
 var mappingSheetID = "1Q8gnjmhrr-Awn12zXdREcemn8kOMTFdw9RPJbXtQQUg";
 var logsSheet = "1HlasqxpVjIhnzcydDuJXxEG9iOvFWI72wlKwnhC9U_g";
@@ -103,6 +103,7 @@ function rootFolderMapping() {
       new Date(),
       Session.getActiveUser().getEmail(),
       JSON.stringify(e),
+      "Error in fetching master and mapping data",
     ]);
     return e;
   }
@@ -161,6 +162,7 @@ function fetchData(id) {
       new Date(),
       Session.getActiveUser().getEmail(),
       JSON.stringify(e),
+      `Error in fetching assets master data from sheet: ${sheetId}`,
     ]);
     return e;
   }
@@ -249,8 +251,8 @@ function createTemplate(templatePara) {
     }
 
     //! Get Domain Name from Web Link, split by . and picks 0th index
-    //todo  change the domain name
-    var domainName = templatePara[0]["Domain Name"].split(".")[0];
+    var reg = /(\w{2,}\.\w{2,3}\.\w{2,3}|\w[A-Za-z0-9-_]{2,}\.\w{2,3})$/;
+    var domainName = templatePara[0]["Domain Name"].match(reg)[0];
 
     for (var i = 0; i < idList.length; i++) {
       try {
@@ -303,7 +305,7 @@ function createTemplate(templatePara) {
           new Date(),
           Session.getActiveUser().getEmail(),
           JSON.stringify(e),
-          `Error awith file id: ${docUrl[i]}`,
+          `Error while creating template from file id: ${docUrl[i]}`,
         ]);
       }
     }
@@ -339,4 +341,4 @@ function arrayToJSONObject(fileList) {
 //! Use InCase, to calculate Execution Time for a Function Call
 // var startTime = (new Date()).getTime()
 // var endTime = (new Date()).getTime()
-// Logger.log(`Call to Arraywala took ${endTime - startTime} milliseconds`)
+// Logger.log(`Call to Function took ${endTime - startTime} milliseconds`)
