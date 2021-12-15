@@ -20,7 +20,7 @@
 <body>
     <div class="container-fluid">
         <div class="row text-center" id="title">
-            <h1>ASSETS & TEMPLATES LIBRARY</h1>
+            <h1>Assets & Templates Library</h1>
         </div>
 
         <div class="row text-center justify-content-around" id="dropdownRow">
@@ -29,7 +29,7 @@
                 <!-- Cycle Dropdown -->
                 <div id="cycleDropdown">
                     <select class="dropdown">
-                        <option class="dropdownOption" value="" disabled selected>Select Business cycle
+                        <option class="dropdownOption" value="" disabled selected>Select Sales cycle
                         </option>
                     </select>
                 </div>
@@ -78,6 +78,7 @@
                 <span class="tooltip1" id="createTemplateInfo">
                     <i class="uil uil-info-circle"></i>
                 </span>
+
                 <button type="button" onclick="openOppIdModal()" class="btn-grad">
                     CREATE TEMPLATE
                 </button>
@@ -94,7 +95,7 @@
                     </div>
                     <div class="modal-body text-center" id="oppIdInput">
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" id="createBtn">
                         <button type="button" class="btnCreate" onclick="verifyOppId()">CREATE</button>
                     </div>
                 </div>
@@ -107,7 +108,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="btn-close" aria-label="Close"
+                        <button type="button" class="btn-close" id="btn-close" aria-label="Close"
                             onclick="closeNotificationModal()"></button>
                     </div>
                     <div class="modal-body">
@@ -124,27 +125,28 @@
 
         <!-- Filtered data is populated in this table -->
         <div class="row justify-content-evenly">
-            <div id="table">
+            <div id="table" class="scrollable">
             </div>
         </div>
 
         <!-- Page Load  -->
-        <div class="modal modal-fullscreen text-center" id="PageLoader" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loadMeLabel">
+        <div class="modal modal-fullscreen text-center" id="PageLoader" data-bs-backdrop="static" tabindex="-1"
+            aria-labelledby="loadMeLabel">
             <div class="modal-dialog modal-dialog-centered">
                 <!-- <div class="modal-body text-center"> -->
-                    <div id="loader">
-                        <div id="shadow"></div>
-                        <div id="box"></div>
-                    </div>
-                    <div id="loadingMessage">
-                        <h4>LOADING</h4>
-                    </div>
+                <div id="loader">
+                    <div id="shadow"></div>
+                    <div id="box"></div>
+                </div>
+                <div id="loadingMessage">
+                    <h4>LOADING</h4>
+                </div>
                 <!-- </div> -->
             </div>
         </div>
 
         <!-- Wait Spinner -->
-        <div class="modal fade" id="waitModal" tabindex="-1" aria-labelledby="loadMeLabel">
+        <div class="modal fade" id="waitModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="loadMeLabel">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-body text-center templateLoad">
                     <div id="loader">
@@ -153,14 +155,14 @@
                     </div>
                     <div id="loadingMessage">
                         <h4>Please Wait.</h4>
-                    </div>  
+                    </div>
                 </div>
             </div>
         </div>
 
 
         <!-- Loading Spinner -->
-        <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadMeLabel">
+        <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="loadMeLabel">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-body text-center templateLoad">
                     <div id="loader">
@@ -169,7 +171,7 @@
                     </div>
                     <div id="loadingMessage">
                         <h4>Creating Files! Please Wait.</h4>
-                    </div>  
+                    </div>
                 </div>
             </div>
         </div>
